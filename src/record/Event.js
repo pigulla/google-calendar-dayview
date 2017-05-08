@@ -5,6 +5,8 @@ const Promise = require('bluebird');
 
 const { ZonedDateTime, Duration } = joda;
 
+// https://developers.google.com/google-apps/calendar/v3/reference/events
+
 class Event extends Record({
     id: null,
     confirmed: null,
@@ -28,7 +30,7 @@ class Event extends Record({
         const confirmed = event.attendees
             .filter(attendee => attendee.self && attendee.responseStatus === 'accepted')
             .length > 0;
-        const participants = await Promise.mapSeries(participant_emails, email => user_cache.get(email));
+        const participants = await Promise.map(participant_emails, user_cache);
 
         return new Event({
             id: event.id,
@@ -40,13 +42,17 @@ class Event extends Record({
             start,
             end,
             summary: event.summary,
-            creator: await user_cache.get(event.creator.email),
-            organizer: await user_cache.get(event.organizer.email)
+            creator: await user_cache(event.creator.email),
+            organizer: await user_cache(event.organizer.email)
         });
     }
 
     get duration() {
         return Duration.between(this.start, this.end);
+    }
+
+    in_progress_at(time) {
+        return this.start.isBefore(time) && this.end.isAfter(time);
     }
 }
 

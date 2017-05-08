@@ -1,25 +1,21 @@
 /* eslint-disable no-console */
 
-// https://developers.google.com/google-apps/calendar/quickstart/nodejs
+// Based on: https://developers.google.com/google-apps/calendar/quickstart/nodejs
 
 const path = require('path');
+const assert = require('assert-plus');
 
 const clipboardy = require('clipboardy');
-const config = require('config');
 const fs = require('mz/fs');
 const GoogleAuth = require('google-auth-library');
 const Promise = require('bluebird');
 const readline = require('readline');
-
-const pkg = require('./package.json');
 
 // If modifying these scopes, delete your previously saved credentials
 const SCOPES = [
     'https://www.googleapis.com/auth/calendar.readonly',
     'https://www.googleapis.com/auth/admin.directory.user.readonly'
 ];
-const TOKEN_FILE = path.join(config.get('token_dir'), `${pkg.name}.json`);
-const CREDENTIALS = config.get('credentials');
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -28,19 +24,22 @@ const CREDENTIALS = config.get('credentials');
  * @param {Object} credentials The authorization client credentials.
  * @parma {string} token_dir
  */
-async function init_oauth_client() {
-    const client_secret = CREDENTIALS.installed.client_secret;
-    const client_id = CREDENTIALS.installed.client_id;
-    const redirect_url = CREDENTIALS.installed.redirect_uris[0];
+async function init_oauth_client(credentials, token_file) {
+    assert.object(credentials, 'credentials');
+    assert.string(token_file, 'token_file');
+
+    const client_secret = credentials.installed.client_secret;
+    const client_id = credentials.installed.client_id;
+    const redirect_url = credentials.installed.redirect_uris[0];
     const auth = new GoogleAuth();
     const auth_client = new auth.OAuth2(client_id, client_secret, redirect_url);
 
     try {
-        const token = await fs.readFile(TOKEN_FILE);
+        const token = await fs.readFile(token_file);
 
         auth_client.credentials = JSON.parse(token);
     } catch (error) {
-        await get_new_token(auth_client);
+        await get_new_token(auth_client, token_file);
     }
 
     return auth_client;
@@ -68,7 +67,7 @@ async function read_line(prompt) {
  *
  * @param {google.auth.OAuth2} auth_client The OAuth2 client to get token for.
  */
-async function get_new_token(auth_client) {
+async function get_new_token(auth_client, token_file) {
     const auth_url = auth_client.generateAuthUrl({
         access_type: 'offline',
         scope: SCOPES
@@ -80,7 +79,7 @@ async function get_new_token(auth_client) {
     const token = await Promise.fromCallback(cb => auth_client.getToken(code, cb));
 
     auth_client.credentials = token;
-    await store_token(token);
+    await store_token(token, token_file);
 
     return auth_client;
 }
@@ -90,18 +89,18 @@ async function get_new_token(auth_client) {
  *
  * @param {Object} token The token to store to disk.
  */
-async function store_token(token) {
+async function store_token(token, token_file) {
     try {
-        await fs.mkdir(path.dirname(TOKEN_FILE));
+        await fs.mkdir(path.dirname(token_file));
     } catch (error) {
         if (error.code !== 'EEXIST') {
             throw error;
         }
     }
 
-    await fs.writeFile(TOKEN_FILE, JSON.stringify(token));
+    await fs.writeFile(token_file, JSON.stringify(token));
 
-    console.log(`Token stored to ${TOKEN_FILE}`);
+    console.log(`Token stored to ${token_file}`);
 }
 
 module.exports = init_oauth_client;

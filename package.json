@@ -4,14 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devel": "babel src/ --out-dir dist/ --copy-files --watch",
+    "build": "babel src/ --out-dir dist/ --copy-files",
+    "start": "node dist/index.js"
   },
-  "author": "",
+  "author": "Raphael Pigulla <pigulla@four66.com>",
   "license": "ISC",
   "dependencies": {
     "assert-plus": "^1.0.0",
-    "babel-plugin-inferno": "^3.2.0",
+    "async-cache": "^1.1.0",
     "bluebird": "^3.5.0",
+    "bunyan": "^1.8.10",
+    "classnames": "^2.2.5",
     "clipboardy": "^1.1.1",
     "config": "^1.26.1",
     "dot": "^1.1.1",
@@ -23,15 +28,17 @@
     "inferno-server": "^3.1.0",
     "js-joda": "^1.5.1",
     "js-joda-timezone": "^1.1.3",
+    "less": "^2.7.2",
     "mz": "^2.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
+    "babel-plugin-inferno": "^3.2.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-es2016": "^6.24.1",
     "eslint": "^3.19.0",
     "eslint-config-four66": "^3.18.0",
-    "eslint-plugin-inferno": "^6.10.4",
-    "less": "^2.7.2"
+    "eslint-plugin-inferno": "^6.10.4"
   }
 }
