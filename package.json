@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "devel": "babel src/ --out-dir dist/ --copy-files --watch",
     "build": "babel src/ --out-dir dist/ --copy-files",
-    "start": "mkdir -p out && babel-node src/ | ./node_modules/.bin/bunyan"
+    "start": "babel-node src/"
   },
   "author": "Raphael Pigulla <pigulla@four66.com>",
   "license": "ISC",

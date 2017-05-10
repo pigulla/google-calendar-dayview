@@ -7,14 +7,7 @@ module.exports = {
         return path.join(__dirname, '..', 'out');
     },
 
-    get token_file() {
-        const dir = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
-
-        return path.join(dir, '.credentials', 'roomcalendar.json');
-    },
-
-    // See here: https://developers.google.com/google-apps/calendar/quickstart/nodejs#step_1_turn_on_the_api_name
-    credentials: null,
+    token_file: null,
 
     delay: 30,
 
