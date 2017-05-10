@@ -12,23 +12,23 @@ const joda = require('js-joda').use(joda_tz);
 const { ZonedDateTime, ZoneId, ChronoUnit } = joda;
 
 const Event = require('./record/Event');
-const init_oauth_client = require('./init_oauth_client');
 const async_user_cache = require('./async_user_cache');
 const Calendar = require('./record/Calendar');
 const { render_css, render_dayview, render_index } = require('./render');
 const rfc3339_formatter = require('./rfc3339_date_formatter');
 
 
-module.exports = function update(config, logger) {
+module.exports = function update(oauth_client, config, logger) {
+    assert.object(oauth_client, 'oauth_client');
+    assert.object(config, 'config');
+    assert.object(logger, 'logger');
+
     const calendar_configs = config.get('calendars');
     const time_zone = config.get('time_zone');
-    const credentials = config.get('credentials');
-    const token_file = config.get('token_file');
     const out_directory = config.get('out_directory');
     const render_options = config.get('render_options');
 
     async function load_calendars() {
-        const oauth_client = await init_oauth_client(credentials, token_file);
         const user_cache = async_user_cache(oauth_client);
 
         const calendars = await Promise.map(calendar_configs, async function (calendar_config) {
@@ -36,6 +36,8 @@ module.exports = function update(config, logger) {
             const events = await Promise
                 .map(raw_events, event => Event.fromJSON(event, user_cache))
                 .filter(event => event.confirmed);
+
+            logger.debug(`Calendar "${calendar_config.name}" updated successfully`);
 
             return new Calendar({
                 events: new ImmutableList(events),

@@ -62,6 +62,20 @@ async function read_line(prompt) {
 }
 
 /**
+ *
+ * @param {mixed} data
+ * @returns {boolean}
+ */
+async function try_copy_to_clipboard(data) {
+    try {
+        await clipboardy.write(data);
+        return true;
+    } catch (error) {
+        return error;
+    }
+}
+
+/**
  * Get and store new token after prompting for user authorization, and then
  * execute the given callback with the authorized OAuth2 client.
  *
@@ -73,8 +87,12 @@ async function get_new_token(auth_client, token_file) {
         scope: SCOPES
     });
 
-    console.log(`Authorize this app by visiting this url (also copied to your clipboard):\n${auth_url}`);
-    await clipboardy.write(auth_url);
+    const copied = await try_copy_to_clipboard(auth_url);
+
+    console.log(
+        `Authorize this app by visiting this url${copied ? ' (also copied to your clipboard)' : ''}:\n${auth_url}`
+    );
+
     const code = await read_line('Enter the code from that page here: ');
     const token = await Promise.fromCallback(cb => auth_client.getToken(code, cb));
 

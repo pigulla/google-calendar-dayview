@@ -16,7 +16,7 @@ module.exports = {
     // See here: https://developers.google.com/google-apps/calendar/quickstart/nodejs#step_1_turn_on_the_api_name
     credentials: null,
 
-    delay: 15,
+    delay: 30,
 
     calendars: [],
 
