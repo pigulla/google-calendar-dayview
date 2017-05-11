@@ -1,13 +1,12 @@
 {
   "name": "roomcalendar",
+  "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "devel": "babel src/ --out-dir dist/ --copy-files --watch",
-    "build": "babel src/ --out-dir dist/ --copy-files",
-    "start": "babel-node src/"
+    "start": "babel-node src/cli.js"
   },
   "author": "Raphael Pigulla <pigulla@four66.com>",
   "license": "ISC",
