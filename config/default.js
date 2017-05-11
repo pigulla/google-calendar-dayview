@@ -7,8 +7,6 @@ module.exports = {
         return path.join(__dirname, '..', 'out');
     },
 
-    token_file: null,
-
     delay: 30,
 
     calendars: [],

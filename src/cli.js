@@ -5,8 +5,8 @@ const fs = require('mz/fs');
 const Promise = require('bluebird');
 const yargs = require('yargs');
 
-const { init_oauth_client, get_oauth_url } = require('../oauth_client');
-const update = require('../update');
+const { init_oauth_client, get_oauth_url } = require('./oauth_client');
+const update = require('./update');
 
 // Workaround, see https://github.com/yargs/yargs/issues/510
 function async_handler(fn) {

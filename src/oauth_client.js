@@ -11,7 +11,7 @@ const SCOPES = [
 
 function init_oauth_client(credentials, token = undefined) {
     assert.object(credentials, 'credentials');
-    assert.optionalString(token, 'token');
+    assert.optionalObject(token, 'token');
 
     const { client_secret, client_id, redirect_uris } = credentials.installed;
 
