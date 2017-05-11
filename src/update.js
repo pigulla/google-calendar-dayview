@@ -11,6 +11,7 @@ const joda = require('js-joda').use(joda_tz);
 
 const { ZonedDateTime, ZoneId, ChronoUnit } = joda;
 
+const logger = require('./logger');
 const Event = require('./record/Event');
 const async_user_cache = require('./async_user_cache');
 const Calendar = require('./record/Calendar');
@@ -18,10 +19,9 @@ const { render_css, render_dayview, render_index } = require('./render');
 const rfc3339_formatter = require('./rfc3339_date_formatter');
 
 
-module.exports = function update(oauth_client, config, logger) {
+module.exports = function update(oauth_client, config) {
     assert.object(oauth_client, 'oauth_client');
     assert.object(config, 'config');
-    assert.object(logger, 'logger');
 
     const calendar_configs = config.get('calendars');
     const time_zone = config.get('time_zone');
