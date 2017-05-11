@@ -52,7 +52,7 @@ async function render_dayview(calendar, prev_url, next_url, time_zone, options) 
     assert.string(prev_url, 'prev_url');
     assert.string(next_url, 'next_url');
     assert.object(options, 'options');
-    assert.string(time_zone, 'time_zone');
+    assert.object(time_zone, 'time_zone');
     assert.finite(options.start_of_day_hour, 'options.start_of_day_hour');
     assert.finite(options.grid_step_minutes, 'options.grid_step_minutes');
     assert.finite(options.day_length_hours, 'options.day_length_hours');

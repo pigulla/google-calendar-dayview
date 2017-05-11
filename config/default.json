@@ -1,0 +1,10 @@
+{
+    "calendars": [],
+    "options": {
+        "time_zone": "Europe/Berlin",
+        "client_refresh_interval_seconds": 30,
+        "start_of_day_hour": 7.5,
+        "grid_step_minutes": 30,
+        "day_length_hours": 10.5
+    }
+}

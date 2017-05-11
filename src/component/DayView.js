@@ -1,7 +1,7 @@
 const classnames = require('classnames');
 const Inferno = require('inferno');
 const Component = require('inferno-component');
-const { ZonedDateTime, ZoneId, DateTimeFormatter, ChronoUnit, Duration } = require('js-joda');
+const { ZonedDateTime, DateTimeFormatter, ChronoUnit, Duration } = require('js-joda');
 
 const Event = require('./Event');
 const rfc3339_formatter = require('../rfc3339_date_formatter');
@@ -16,8 +16,7 @@ class DayView extends Component {
     constructor(props, context) {
         super(props, context);
 
-        const time_zone = ZoneId.of(props.time_zone);
-        const now = ZonedDateTime.now(time_zone);
+        const now = ZonedDateTime.now(props.time_zone);
         const offset = Duration.ofHours(props.start_of_day_hour);
         const start = now.truncatedTo(ChronoUnit.DAYS).plus(offset);
         const end = start.plusHours(props.day_length_hours);
@@ -28,7 +27,6 @@ class DayView extends Component {
         this.state = {
             now,
             steps,
-            time_zone,
             start,
             end,
             window,

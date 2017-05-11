@@ -19,14 +19,14 @@ const { render_css, render_dayview, render_index } = require('./render');
 const rfc3339_formatter = require('./rfc3339_date_formatter');
 
 
-module.exports = function update(oauth_client, config) {
+module.exports = function update(oauth_client, out_directory, config) {
     assert.object(oauth_client, 'oauth_client');
+    assert.string(out_directory, 'out_directory');
     assert.object(config, 'config');
 
     const calendar_configs = config.get('calendars');
-    const time_zone = config.get('time_zone');
-    const out_directory = config.get('out_directory');
-    const render_options = config.get('render_options');
+    const options = config.get('options');
+    const time_zone = ZoneId.of(options.time_zone);
 
     async function load_calendars() {
         const user_cache = async_user_cache(oauth_client);
@@ -49,7 +49,7 @@ module.exports = function update(oauth_client, config) {
     }
 
     async function write_styles() {
-        const css = await render_css(render_options);
+        const css = await render_css(options);
         const css_file = path.join(out_directory, 'styles.css');
 
         return fs.writeFile(css_file, css);
@@ -59,7 +59,7 @@ module.exports = function update(oauth_client, config) {
         await Promise.map(calendars.toArray(), async function (calendar, i) {
             const prev_url = `${calendars.get(i - 1).id}.html`;
             const next_url = `${calendars.get((i + 1) % calendars.size).id}.html`;
-            const html = await render_dayview(calendar, prev_url, next_url, time_zone, render_options);
+            const html = await render_dayview(calendar, prev_url, next_url, time_zone, options);
             const out_file = path.join(out_directory, `${calendar.id}.html`);
 
             return fs.writeFile(out_file, html);
@@ -67,16 +67,15 @@ module.exports = function update(oauth_client, config) {
     }
 
     async function get_todays_events(auth_client, calendar_id) {
-        assert.string(time_zone, 'time_zone');
         assert.object(auth_client, 'auth_client');
         assert.string(calendar_id, 'calendar_id');
 
-        const start_of_day = ZonedDateTime.now(ZoneId.of(time_zone)).truncatedTo(ChronoUnit.DAYS);
+        const start_of_day = ZonedDateTime.now(time_zone).truncatedTo(ChronoUnit.DAYS);
         const end_of_day = start_of_day.plusDays(1).minusNanos(1);
 
         // See https://developers.google.com/google-apps/calendar/v3/reference/events/list
         const calendar = google.calendar('v3');
-        const options = {
+        const params = {
             auth: auth_client,
             calendarId: calendar_id,
             timeMin: rfc3339_formatter.format(start_of_day),
@@ -84,10 +83,10 @@ module.exports = function update(oauth_client, config) {
             maxResults: 100,
             singleEvents: true,
             orderBy: 'startTime',
-            timeZone: time_zone
+            timeZone: time_zone.id()
         };
 
-        const response = await Promise.fromCallback(cb => calendar.events.list(options, cb));
+        const response = await Promise.fromCallback(cb => calendar.events.list(params, cb));
 
         return response.items;
     }
