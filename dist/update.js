@@ -1,3 +1,5 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 const assert = require('assert-plus');
 const { List: ImmutableList } = require('immutable');
 const Promise = require('bluebird');
@@ -16,7 +18,6 @@ const Calendar = require('./record/Calendar');
 const { render_css, render_dayview, render_index } = require('./lib/render');
 const rfc3339_formatter = require('./lib/rfc3339_date_formatter');
 
-
 module.exports = function update(oauth_client, out_directory, config, now) {
     assert.object(oauth_client, 'oauth_client');
     assert.string(out_directory, 'out_directory');
@@ -30,16 +31,13 @@ module.exports = function update(oauth_client, out_directory, config, now) {
 
         const calendars = await Promise.map(config.calendars, async function (calendar_config) {
             const raw_events = await get_todays_events(oauth_client, calendar_config.id);
-            const events = await Promise
-                .map(raw_events, event => Event.from_json(event, user_cache))
-                .filter(event => event.confirmed);
+            const events = await Promise.map(raw_events, event => Event.from_json(event, user_cache)).filter(event => event.confirmed);
 
             logger.debug(`Calendar "${calendar_config.name}" updated successfully`);
 
-            return new Calendar({
-                events: new ImmutableList(events),
-                ...calendar_config
-            });
+            return new Calendar(_extends({
+                events: new ImmutableList(events)
+            }, calendar_config));
         });
 
         return new ImmutableList(calendars);
@@ -96,9 +94,5 @@ module.exports = function update(oauth_client, out_directory, config, now) {
         await fs.writeFile(out_file, html);
     }
 
-    return Promise.join(
-        write_styles(),
-        write_index(),
-        load_calendars().then(write_calendars)
-    );
+    return Promise.join(write_styles(), write_index(), load_calendars().then(write_calendars));
 };

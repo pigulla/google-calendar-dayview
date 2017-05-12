@@ -3,12 +3,10 @@
 const Joi = require('joi');
 
 module.exports = Joi.object({
-    calendars: Joi.array().items(
-        Joi.object({
-            name: Joi.string().min(1),
-            id: Joi.string().email()
-        })
-    ).min(1).required(),
+    calendars: Joi.array().items(Joi.object({
+        name: Joi.string().min(1),
+        id: Joi.string().email()
+    })).min(1).required(),
     options: Joi.object({
         client_refresh_interval_seconds: Joi.number().integer().min(1).default(30),
         start_of_day_hour: Joi.number().positive().multiple(0.5).default(7.5),

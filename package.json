@@ -5,16 +5,19 @@
   "main": "dist/update.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "devel": "babel src/ --out-dir dist/ --copy-files --watch",
-    "postinstall": "npm run dist",
-    "dist": "babel src/ --out-dir dist/ --copy-files",
-    "start": "node dist/cli.js"
+    "develop": "babel src/ --out-dir dist/ --copy-files --watch",
+    "prepublish": "rm -rf dist/ && babel src/ --out-dir dist/ --copy-files",
+    "start": "node dist/cli/index.js"
   },
-  "bin": "./dist/cli.js",
+  "bin": "./dist/cli/index.js",
   "author": "Raphael Pigulla <pigulla@four66.com>",
   "license": "ISC",
   "keywords": [
-    "google-api", "google-calendar", "dashboard", "room"
+    "google-api",
+    "google-calendar",
+    "calendar",
+    "dashboard",
+    "room"
   ],
   "repository": {
     "type": "git",
@@ -29,7 +32,6 @@
     "bluebird": "^3.5.0",
     "classnames": "^2.2.5",
     "clipboardy": "^1.1.1",
-    "config": "^1.26.1",
     "console-log-level": "^1.4.0",
     "dot": "^1.1.1",
     "google-auth-library": "^0.10.0",
