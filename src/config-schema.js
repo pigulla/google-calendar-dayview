@@ -6,7 +6,7 @@ module.exports = Joi.object({
     calendars: Joi.array().items(
         Joi.object({
             name: Joi.string().min(1),
-            id: Joi.string().email().regex(/@resource\.calendar\.google\.com$/)
+            id: Joi.string().email()
         })
     ).min(1),
     options: Joi.object({

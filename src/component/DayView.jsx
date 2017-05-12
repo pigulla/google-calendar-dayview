@@ -1,10 +1,10 @@
 const classnames = require('classnames');
 const Inferno = require('inferno');
 const Component = require('inferno-component');
-const { ZonedDateTime, DateTimeFormatter, ChronoUnit, Duration } = require('js-joda');
+const { DateTimeFormatter, ChronoUnit, Duration } = require('js-joda');
 
 const Event = require('./Event');
-const rfc3339_formatter = require('../rfc3339_date_formatter');
+const rfc3339_formatter = require('../lib/rfc3339_date_formatter');
 
 const hour_formatter = DateTimeFormatter.ofPattern('HH:mm');
 
@@ -16,16 +16,14 @@ class DayView extends Component {
     constructor(props, context) {
         super(props, context);
 
-        const now = ZonedDateTime.now(props.time_zone);
         const offset = Duration.ofHours(props.start_of_day_hour);
-        const start = now.truncatedTo(ChronoUnit.DAYS).plus(offset);
+        const start = props.now.truncatedTo(ChronoUnit.DAYS).plus(offset);
         const end = start.plusHours(props.day_length_hours);
         const window = Duration.between(start, end);
         const grid_step = Duration.ofMinutes(props.grid_step_minutes);
         const steps = (60 * props.day_length_hours) / props.grid_step_minutes;
 
         this.state = {
-            now,
             steps,
             start,
             end,
@@ -45,7 +43,7 @@ class DayView extends Component {
     }
 
     is_event_upcoming_or_in_progress() {
-        const now = this.state.now;
+        const now = this.props.now;
         const soon = now.plusMinutes(5);
 
         return this.props.calendar.events.filter(function (event) {
@@ -82,7 +80,7 @@ class DayView extends Component {
     }
 
     render_now_indicator() {
-        const percent = this.get_percent_for_time(this.state.now);
+        const percent = this.get_percent_for_time(this.props.now);
         const styles = {
             top: `${percent.toFixed(1)}%`
         };
@@ -92,8 +90,8 @@ class DayView extends Component {
 
     render_event(event) {
         const classes = classnames({
-            past: event.end.isBefore(this.state.now),
-            active: event.in_progress_at(this.state.now)
+            past: event.end.isBefore(this.props.now),
+            active: event.in_progress_at(this.props.now)
         });
         const styles = {
             top: `${this.get_percent_for_time(event.start).toFixed(1)}%`,

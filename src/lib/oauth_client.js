@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 const assert = require('assert-plus');
 const GoogleAuth = require('google-auth-library');
 

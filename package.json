@@ -1,15 +1,28 @@
 {
-  "name": "roomcalendar",
-  "private": true,
+  "name": "google-calendar-dayview",
   "version": "1.0.0",
-  "description": "",
-  "main": "cli.js",
+  "description": "A dead simple dashboard for meeting rooms using Google Calendar",
+  "main": "dist/update.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel-node src/cli.js"
+    "devel": "babel src/ --out-dir dist/ --copy-files --watch",
+    "postinstall": "npm run dist",
+    "dist": "babel src/ --out-dir dist/ --copy-files",
+    "start": "node dist/cli.js"
   },
+  "bin": "./dist/cli.js",
   "author": "Raphael Pigulla <pigulla@four66.com>",
   "license": "ISC",
+  "keywords": [
+    "google-api", "google-calendar", "dashboard", "room"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pigulla/google-calendar-dayview.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pigulla/google-calendar-dayview/issues"
+  },
   "dependencies": {
     "assert-plus": "^1.0.0",
     "async-cache": "^1.1.0",

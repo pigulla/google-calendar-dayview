@@ -6,7 +6,7 @@ class User extends Record({
     first_name: null,
     last_name: null
 }) {
-    static fromJSON(json) {
+    static from_json(json) {
         return new User({
             id: json.id,
             email: json.primaryEmail,
@@ -15,20 +15,20 @@ class User extends Record({
         });
     }
 
-    get full_name() {
-        if (this.first_name === null || this.last_name === null) {
-            return this.email;
-        }
+    static as_unknown(email) {
+        return new User({ email });
+    }
 
-        return `${this.first_name} ${this.last_name}`;
+    get is_unknown() {
+        return this.first_name === null || this.last_name === null;
+    }
+
+    get full_name() {
+        return this.is_unknown ? this.email : `${this.first_name} ${this.last_name}`;
     }
 
     get abbreviated_full_name() {
-        if (this.first_name === null || this.last_name === null) {
-            return this.email;
-        }
-
-        return `${this.first_name.substr(0, 1)}. ${this.last_name}`;
+        return this.is_unknown ? this.email : `${this.first_name.substr(0, 1)}. ${this.last_name}`;
     }
 }
 

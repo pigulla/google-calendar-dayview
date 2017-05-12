@@ -7,12 +7,12 @@ const less = require('less');
 const Inferno = require('inferno');
 const InfernoServer = require('inferno-server');
 
-const DayView = require('./component/DayView');
+const DayView = require('../component/DayView');
 
 async function templatize(name) {
     assert.string(name, 'file');
 
-    const file = path.join(__dirname, 'template', name);
+    const file = path.join(__dirname, '..', 'template', name);
     const source = await fs.readFile(file);
 
     return dot.template(source.toString());
@@ -23,7 +23,7 @@ async function render_css(options) {
     assert.finite(options.day_length_hours, 'options.day_length_hours');
     assert.finite(options.grid_step_minutes, 'options.grid_step_minutes');
 
-    const file = path.join(__dirname, 'styles.less');
+    const file = path.join(__dirname, '..', 'styles.less');
     const styles = await fs.readFile(file);
     const step_count = ((60 * options.day_length_hours) / options.grid_step_minutes) - 1;
     const result = await less.render(styles.toString(), {
@@ -47,7 +47,7 @@ async function render_index(main_calendar_id) {
     });
 }
 
-async function render_dayview(calendar, prev_url, next_url, time_zone, options) {
+async function render_dayview(calendar, prev_url, next_url, time_zone, options, now) {
     assert.object(calendar, 'calendar');
     assert.string(prev_url, 'prev_url');
     assert.string(next_url, 'next_url');
@@ -57,8 +57,10 @@ async function render_dayview(calendar, prev_url, next_url, time_zone, options) 
     assert.finite(options.grid_step_minutes, 'options.grid_step_minutes');
     assert.finite(options.day_length_hours, 'options.day_length_hours');
     assert.finite(options.client_refresh_interval_seconds, 'options.client_refresh_interval_seconds');
+    assert.optionalObject(now, 'now');
 
     const props = {
+        now,
         calendar,
         prev_url,
         next_url,

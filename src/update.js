@@ -1,5 +1,3 @@
-// https://console.developers.google.com/apis/dashboard?project=still-sensor-166710
-
 const assert = require('assert-plus');
 const { List: ImmutableList } = require('immutable');
 const Promise = require('bluebird');
@@ -9,20 +7,21 @@ const google = require('googleapis');
 const joda_tz = require('js-joda-timezone');
 const joda = require('js-joda').use(joda_tz);
 
-const { ZonedDateTime, ZoneId, ChronoUnit } = joda;
+const { ZoneId, ChronoUnit } = joda;
 
-const logger = require('./logger');
+const logger = require('./lib/logger');
 const Event = require('./record/Event');
-const async_user_cache = require('./async_user_cache');
+const async_user_cache = require('./lib/async_user_cache');
 const Calendar = require('./record/Calendar');
-const { render_css, render_dayview, render_index } = require('./render');
-const rfc3339_formatter = require('./rfc3339_date_formatter');
+const { render_css, render_dayview, render_index } = require('./lib/render');
+const rfc3339_formatter = require('./lib/rfc3339_date_formatter');
 
 
-module.exports = function update(oauth_client, out_directory, config) {
+module.exports = function update(oauth_client, out_directory, config, now) {
     assert.object(oauth_client, 'oauth_client');
     assert.string(out_directory, 'out_directory');
     assert.object(config, 'config');
+    assert.object(now, 'now');
 
     const calendar_configs = config.get('calendars');
     const options = config.get('options');
@@ -34,7 +33,7 @@ module.exports = function update(oauth_client, out_directory, config) {
         const calendars = await Promise.map(calendar_configs, async function (calendar_config) {
             const raw_events = await get_todays_events(oauth_client, calendar_config.id);
             const events = await Promise
-                .map(raw_events, event => Event.fromJSON(event, user_cache))
+                .map(raw_events, event => Event.from_json(event, user_cache))
                 .filter(event => event.confirmed);
 
             logger.debug(`Calendar "${calendar_config.name}" updated successfully`);
@@ -59,7 +58,7 @@ module.exports = function update(oauth_client, out_directory, config) {
         await Promise.map(calendars.toArray(), async function (calendar, i) {
             const prev_url = `${calendars.get(i - 1).id}.html`;
             const next_url = `${calendars.get((i + 1) % calendars.size).id}.html`;
-            const html = await render_dayview(calendar, prev_url, next_url, time_zone, options);
+            const html = await render_dayview(calendar, prev_url, next_url, time_zone, options, now);
             const out_file = path.join(out_directory, `${calendar.id}.html`);
 
             return fs.writeFile(out_file, html);
@@ -70,7 +69,7 @@ module.exports = function update(oauth_client, out_directory, config) {
         assert.object(auth_client, 'auth_client');
         assert.string(calendar_id, 'calendar_id');
 
-        const start_of_day = ZonedDateTime.now(time_zone).truncatedTo(ChronoUnit.DAYS);
+        const start_of_day = now.truncatedTo(ChronoUnit.DAYS);
         const end_of_day = start_of_day.plusDays(1).minusNanos(1);
 
         // See https://developers.google.com/google-apps/calendar/v3/reference/events/list
