@@ -1,0 +1,106 @@
+@import 'common';
+@import 'mixins';
+@import 'clock';
+
+.dash-page {
+    $footer-height: 15vh;
+    $overlay-color: white;
+    $nav-height: 10vh;
+    $bottom-spacing: 5vh;
+
+    height: 100%;
+    display: flex;
+    align-items: center;
+    align-content: flex-start;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    background-size: 0 0;
+
+    &::after {
+        content: '';
+
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+
+        z-index: 0;
+        filter: brightness(0.3);
+        background: no-repeat center center;
+        background-size: cover;
+    }
+
+    & > * {
+        z-index: 1;
+    }
+
+    nav {
+        display: flex;
+        text-align: center;
+        flex: 0 0 $nav-height;
+        flex-direction: column;
+        justify-content: center;
+
+        a {
+            font-size: 7vh;
+            width: $nav-height;
+            display: inline-block;
+
+            &, &:hover {
+                color: rgba($overlay-color, 0.5);
+                text-decoration: none;
+            }
+        }
+    }
+
+    main {
+        flex: 0 0 calc(100% - #{$nav-height} - #{$footer-height} - #{$bottom-spacing});
+        display: flex;
+        align-items: center;
+
+        @media only screen and (orientation: landscape) {
+            .clock {
+                @include clock(#c0c0c0, #d0d0d0);
+
+                width: 50vh;
+                height: 50vh;
+            }
+        }
+
+        @media only screen and (orientation: portrait) {
+            .clock {
+                @include clock(#808080, #d0d0d0);
+
+                width: 50vw;
+                height: 50vw;
+            }
+        }
+    }
+
+    footer {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: $overlay-color;
+        display: flex;
+        flex-direction: column;
+        flex: 0 0 $footer-height;
+        align-items: center;
+        width: 100%;
+        justify-content: center;
+        border-top: 1px solid rgba($overlay-color, 0.2);
+        border-bottom: 1px solid rgba($overlay-color, 0.2);
+
+        p {
+            @include no-text-overflow();
+
+            text-transform: uppercase;
+            max-width: 100%;
+            font-size: 3vh;
+        }
+
+        time {
+            font-size: 7vh;
+            font-weight: bold;
+        }
+    }
+}

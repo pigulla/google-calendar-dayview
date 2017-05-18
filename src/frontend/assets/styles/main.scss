@@ -1,0 +1,9 @@
+@import 'common';
+
+// Fix font size for DevTools
+.router-container > :first-child:not(.router-container) {
+    font-size: 12px;
+}
+
+@import 'agenda-page';
+@import 'dash-page';

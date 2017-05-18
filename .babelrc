@@ -1,7 +1,25 @@
 {
-    "presets": ["es2016"],
+    "presets": [
+        "es2015",
+        "react"
+    ],
     "plugins": [
-        "inferno",
+        [
+            "babel-plugin-root-import",
+            [
+                {
+                    "rootPathPrefix": "~",
+                    "rootPathSuffix": "src/backend"
+                },
+                {
+                    "rootPathPrefix": "@",
+                    "rootPathSuffix": "src/isomorphic"
+                }
+            ]
+        ],
+        "transform-decorators-legacy",
+        "transform-class-properties",
+        "transform-function-bind",
         "transform-object-rest-spread"
     ]
 }

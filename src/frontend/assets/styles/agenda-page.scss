@@ -1,0 +1,245 @@
+@import 'common';
+@import 'mixins';
+
+.agenda-page {
+    /*
+     * The main trick here is that the font size on the root element (i.e., the html tag) is set to the "row height" via
+     * JavaScript. This means that '1rem' is exactly the row height throughout the entire style sheet.
+     *
+     * The height of the navigation header is independent of this.
+     */
+
+    $nav-height: 1rem;
+    $time-column-width: 1.5rem;
+
+    $default-font-color: white;
+
+    color: $default-font-color;
+
+    a {
+        color: $default-font-color;
+    }
+
+    main {
+        // 'top' is set via JavaScript
+        @include absolute();
+
+        overflow: hidden;
+        background: linear-gradient(to top, #181818 0%, black 100%);
+    }
+
+    nav {
+        /*
+         * The font-size and height of this element is set via JavaScript (to the same value). This means
+         * that '1em' is the height of the navigation, '0.5em' is half its height and so on.
+         */
+        @mixin em-scaled($scale) {
+            font-size: $scale * 1em;
+            line-height: 1em / $scale; // 1em is now the scaled value, not the value of the parent
+        }
+
+        $button-width: 2em;
+
+        @include absolute($bottom: initial);
+
+        background: linear-gradient(to bottom, #45484d 0%, black 100%);
+        display: flex;
+        flex-direction: row;
+        z-index: 3;
+        justify-content: center;
+        align-items: center;
+
+        a[rel] {
+            @include em-scaled(0.35);
+
+            flex: 0 0 $button-width;
+            text-align: center;
+            color: rgb(220, 220, 220);
+
+            &[rel="prev"] {
+                margin-right: 0.5 * $button-width;
+            }
+
+            &[rel="next"] {
+                margin-left: 0.5 * $button-width;
+            }
+        }
+
+        a.self {
+            @include no-text-overflow();
+            @include em-scaled(0.5);
+
+            color: rgb(220, 220, 220);
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: calc(100% - 2 * #{$button-width});
+            text-align: center;
+            text-transform: uppercase;
+        }
+    }
+
+    .now {
+        $thickness: 0.1rem;
+
+        position: absolute;
+        left: 0;
+        right: 0;
+        box-shadow: 0 0 1vh 0 rgba(0, 0, 0, 0.75);
+        z-index: 2;
+        height: $thickness;
+        opacity: 0.8;
+        margin-top: -0.5 * $thickness;
+
+        &::before, &::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            margin-top: -2.5 * $thickness
+        }
+
+        &::before {
+            left: 0;
+            border-width: (3 * $thickness) 0 (3 * $thickness) (3 * $thickness);
+        }
+
+        &::after {
+            right: 0;
+            border-width: (3 * $thickness) (3 * $thickness) (3 * $thickness) 0;
+        }
+    }
+
+    .day {
+        height: 100%;
+        position: relative;
+
+        time {
+            @include absolute($top: initial, $bottom: initial);
+
+            font-size: 0.3rem;
+            height: 1rem;
+
+            &.full {
+                color: darken($default-font-color, 30%);
+                border-top-style: solid;
+                border-top-width: 1px;
+            }
+
+            &:not(.full) {
+                color: darken($default-font-color, 50%);
+
+                &::after {
+                    content: '';
+                    border-top-style: dashed;
+                    border-top-width: 1px;
+                    position: absolute;
+                    width: 100%;
+                    height: 0;
+                    top: 0;
+                }
+
+                span {
+                    visibility: hidden;
+                }
+            }
+
+            span {
+                text-align: center;
+                width: $time-column-width;
+                overflow: hidden;
+                padding-top: 0.1rem;
+                display: inline-block;
+            }
+        }
+    }
+
+    article {
+        z-index: 1;
+        position: absolute;
+        left: $time-column-width;
+        right: 0;
+
+        border-left-width: 0.2rem;
+        border-left-style: solid;
+        overflow: hidden;
+        flex-direction: row;
+        flex-wrap: wrap;
+        display: flex;
+        align-content: flex-start;
+        justify-content: space-between;
+
+        &.upcoming {
+            animation: upcoming 0.7s ease-in-out infinite alternate;
+
+            @keyframes upcoming {
+                0% {
+                    filter: brightness(0.7);
+                }
+                100% {
+                    filter: brightness(1.0);
+                }
+            }
+        }
+
+        &.past {
+            &, a {
+                color: darken($default-font-color, 50%);
+            }
+
+            h2 {
+                text-shadow: none;
+            }
+        }
+
+        h2, a[rel="author"] {
+            @include no-text-overflow();
+
+            line-height: 1rem;
+            height: 1rem;
+            flex-grow: 1;
+        }
+
+        h2 {
+            font-size: 0.5rem;
+            text-shadow: 0.05rem 0.05rem 0.1rem rgba(0, 0, 0, 0.7);
+            margin: 0 0.3rem;
+            max-width: calc(75% - 0.5rem);
+        }
+
+        a[rel="author"] {
+            font-size: 0.4rem;
+            text-align: right;
+            margin: 0 0.3rem;
+            max-width: calc(25% - 0.5rem);
+
+            &::before {
+                content: '';
+            }
+        }
+
+        &:not(.active) ul.attendees {
+            display: none;
+        }
+
+        ul.attendees {
+            display: flex;
+            flex-basis: 100%;
+            flex-direction: row;
+            padding: 0 0.3rem;
+            overflow: hidden;
+            flex-wrap: wrap;
+
+            li {
+                display: inline-flex;
+                white-space: nowrap;
+                font-size: 0.3rem;
+
+                &:not(:last-of-type)::after {
+                    content: ', ';
+                    white-space: pre;
+                }
+            }
+        }
+    }
+}

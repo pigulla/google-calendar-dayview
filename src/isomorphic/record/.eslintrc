@@ -1,0 +1,10 @@
+{
+    "rules": {
+        "new-cap": [
+            "error",
+            {
+                "capIsNewExceptionPattern": "^(Immutable.)?Record$"
+            }
+        ]
+    }
+}
