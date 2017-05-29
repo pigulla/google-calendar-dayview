@@ -2,7 +2,7 @@ const Joi = require('joi');
 const joda_timezone = require('js-joda-timezone');
 const joda = require('js-joda').use(joda_timezone);
 
-const hex_color_regex = /^rgba(\d+,\d+,\d+,(\d+\.)?\d+)$/i;
+const hex_color_regex = /^rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*(\d+\.)?\d+\s*\)$/;
 
 module.exports.calendars = Joi.array().items(
     Joi.object({

@@ -1,5 +1,5 @@
 import assert from 'assert-plus';
-import { Map as ImmutableMap } from 'immutable';
+import { is, Map as ImmutableMap } from 'immutable';
 
 /**
  * @param {Immutable.Map} current_map The map holding the current state
@@ -29,7 +29,7 @@ export default function update_map_differential(current_map, next_map, get_id = 
             const before = map.get(id);
             const after = next_map.get(id);
 
-            return map.set(id, after.equals(before) ? before : after);
+            return map.set(id, is(after, before) ? before : after);
         }, state);
     });
 }

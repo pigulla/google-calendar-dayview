@@ -9,6 +9,7 @@ import update_map_differential from './update_map_differential';
 const INITIAL_STATE = new ImmutableMap({
     updated: null,
     primary: null,
+    upcoming: null,
     all: new OrderedMap()
 });
 
@@ -39,6 +40,27 @@ export default function (state = INITIAL_STATE, action = null) {
 
             localStorage.setItem('primary', primary.id);
             new_state = new_state.set('primary', primary);
+            break;
+        }
+
+        case Actions.UNSET_UPCOMING: {
+            new_state = new_state.set('upcoming', null);
+            break;
+        }
+
+        case Actions.SET_UPCOMING: {
+            assert.object(action.payload, 'action.payload');
+            new_state = new_state.set('upcoming', new ImmutableMap({
+                event: action.payload,
+                handled: false
+            }));
+            break;
+        }
+
+        case Actions.SET_UPCOMING_HANDLED: {
+            assert.object(new_state.get('upcoming'), 'state.upcoming');
+
+            new_state = new_state.setIn(['upcoming', 'handled'], true);
             break;
         }
 

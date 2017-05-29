@@ -23,6 +23,7 @@
     },
 
     "rules": {
+        "newline-after-var": "off",
         "no-mixed-operators": "off"
     }
 }

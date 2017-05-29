@@ -13,42 +13,33 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import routes from 'app/routes';
 import store from 'app/store/';
+import { load } from 'app/store/action/calendars';
 
-import time_service from 'app/service/time';
-import calendar_service from 'app/service/calendars';
+import { hour_formatter } from 'date_formatter';
+import { set_time } from 'app/store/action/application';
 
 joda.use(joda_tz);
 
-
-import { set_primary } from 'app/store/action/calendars';
-import { set_time } from 'app/store/action/application';
-import { hour_formatter } from 'date_formatter';
-
 (async function () {
-    time_service.start();
+    try {
+        await store.dispatch(load());
+        await document_ready();
 
-    await calendar_service.start();
-    await document_ready();
+        window.set_time = function (time) {
+            const new_time = joda.LocalTime.parse(time, hour_formatter).atDate(joda.LocalDate.now());
 
-    window.set_primary = function (id) {
-        store.dispatch(set_primary(id));
-    };
-    window.set_time = function (time) {
-        const new_time = joda.LocalTime.parse(time, hour_formatter);
+            store.dispatch(set_time(new_time));
+        };
 
-        store.dispatch(set_time(new_time));
-    };
-
-
-    ReactDOM.render(
-        <Provider store={store}>
-            <Router>
-                {routes}
-            </Router>
-        </Provider>,
-        document.getElementById('root')
-    );
-})().catch(function (error) {
-    console.error(error);
-});
-
+        ReactDOM.render(
+            <Provider store={store}>
+                <Router>
+                    {routes}
+                </Router>
+            </Provider>,
+            document.getElementById('root')
+        );
+    } catch (error) {
+        console.error(error);
+    }
+})();

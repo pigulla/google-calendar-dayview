@@ -9,18 +9,21 @@ import Event from 'app/component/agenda/Event';
 import NowIndicator from './NowIndicator';
 import EventRecord from 'record/Event';
 import { hour, rfc3339 } from 'date_formatter';
+import throttled_time from 'app/decorator/throttled_time';
 
 function minutes_in_day(time) {
     return (60 * time.hour()) + time.minute();
 }
 
+@throttled_time(Duration.ofSeconds(60))
 class DayView extends PureComponent {
     static propTypes = {
         className: PropTypes.string,
         style: PropTypes.object,
         theme: PropTypes.object.isRequired,
         events: listOf(PropTypes.instanceOf(EventRecord)).isRequired,
-        now: PropTypes.instanceOf(ZonedDateTime).isRequired,
+        upcoming: PropTypes.instanceOf(EventRecord),
+        time: PropTypes.instanceOf(ZonedDateTime).isRequired,
         start_of_agenda: PropTypes.instanceOf(LocalTime).isRequired,
         day_length: PropTypes.instanceOf(Duration).isRequired,
         grid_step: PropTypes.instanceOf(Duration).isRequired
@@ -32,13 +35,14 @@ class DayView extends PureComponent {
         this.state = DayView.getStateFromProps(props);
     }
 
-    static getStateFromProps(props) {
-        const start = props.now.truncatedTo(ChronoUnit.DAYS)
+    static getStateFromProps(props, current_state = null) {
+        const start = props.time.truncatedTo(ChronoUnit.DAYS)
             .plusHours(props.start_of_agenda.hour())
             .plusMinutes(props.start_of_agenda.minute());
         const end = start.plus(props.day_length);
+        const unchanged = current_state && current_state.start.equals(start) && current_state.end.equals(end);
 
-        return {
+        return unchanged ? {} : {
             start,
             end,
             window: Duration.between(start, end)
@@ -46,7 +50,7 @@ class DayView extends PureComponent {
     }
 
     componentWillReceiveProps(next_props) {
-        this.setState(DayView.getStateFromProps(next_props));
+        this.setState(current_state => DayView.getStateFromProps(next_props, current_state));
     }
 
     renderRows() {
@@ -80,11 +84,11 @@ class DayView extends PureComponent {
     }
 
     get isEventUpcomingOrInProgress() {
-        const now = this.props.now;
-        const soon = now.plusMinutes(5);
+        const time = this.props.time;
+        const soon = time.plusMinutes(5);
 
         return !!this.props.events
-            .find(event => event.in_progress_at(now) || event.in_progress_at(soon));
+            .find(event => event.in_progress_at(time) || event.in_progress_at(soon));
     }
 
     getPercentForTime(time) {
@@ -103,16 +107,16 @@ class DayView extends PureComponent {
                 key={event.id}
                 event={event}
                 color={index % 2 ? this.props.theme.primary : this.props.theme.alternate}
-                past={event.end.isBefore(this.props.now)}
-                active={event.in_progress_at(this.props.now)}
-                upcoming={event.in_progress_at(this.props.now.plusMinutes(5)) && !event.in_progress_at(this.props.now)}
+                past={event.end.isBefore(this.props.time)}
+                active={event.in_progress_at(this.props.time)}
+                upcoming={event === this.props.upcoming}
                 top_percent={this.getPercentForTime(event.start)}
                 height_percent={this.getPercentForDuration(event.duration)}/>
         );
     }
 
     renderEvents() {
-        const start_of_day = this.props.now.truncatedTo(ChronoUnit.DAYS);
+        const start_of_day = this.props.time.truncatedTo(ChronoUnit.DAYS);
         const end_of_day = start_of_day.plusDays(1);
 
         return this.props.events
@@ -120,6 +124,7 @@ class DayView extends PureComponent {
             .map(::this.renderEvent)
             .toArray();
     }
+
     render() {
         const classes = classnames(this.props.className, {
             vacant: !this.isEventUpcomingOrInProgress
@@ -129,8 +134,8 @@ class DayView extends PureComponent {
             <main className={classes} style={this.props.style}>
                 <NowIndicator
                     color={this.props.theme.now}
-                    now={this.props.now}
-                    top_percent={this.getPercentForTime(this.props.now)}/>
+                    time={this.props.time}
+                    top_percent={this.getPercentForTime(this.props.time)}/>
                 {this.renderEvents()}
                 <div className="day">
                     {this.renderRows()}

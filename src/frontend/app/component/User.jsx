@@ -1,34 +1,40 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
+import connected from 'app/decorator/connected';
 import UserRecord from 'record/User';
 
+@connected((state, props) => ({
+    user: state.get('users').get(props.email, null)
+}))
 class User extends PureComponent {
     static propTypes = {
-        dispatch: PropTypes.func.isRequired, // added by connect()
+        dispatch: PropTypes.func.isRequired,
         component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
         user: PropTypes.instanceOf(UserRecord),
         email: PropTypes.string
     }
 
+    static defaultProps = {
+        component: 'span',
+        user: null,
+        email: null
+    }
+
     render() {
-        const { component, user, email, dispatch, ...props } = this.props; // eslint-disable-line no-unused-vars
+        const { component: Component, user, email, dispatch, ...props } = this.props; // eslint-disable-line no-unused-vars
 
         if (user === null) {
             return null;
         }
 
-        const Tag = component ? component : 'span';
         const name = `${user.is_unknown ? user.email : user.full_name}`;
         const suffix = user.is_unknown ? '' : ` (${user.email})`;
         const title = `${name}${suffix}`;
         const content = user.is_unknown ? user.email : user.last_name;
 
-        return <Tag title={title} {...props}>{content}</Tag>;
+        return <Component title={title} {...props}>{content}</Component>;
     }
 }
 
-export default connect((state, props) => ({
-    user: state.get('users').get(props.email, null)
-}))(User);
+export default User;

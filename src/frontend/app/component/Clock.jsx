@@ -7,7 +7,7 @@ import clock_face from 'assets/images/clock-face.svg';
 // Based on https://cssanimation.rocks/clocks/
 export default class Clock extends PureComponent {
     static propTypes = {
-        time: PropTypes.instanceOf(ZonedDateTime)
+        time: PropTypes.instanceOf(ZonedDateTime).isRequired
     }
 
     render() {

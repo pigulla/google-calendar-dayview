@@ -11,19 +11,26 @@ class NowIndicator extends PureComponent {
     static propTypes = {
         className: PropTypes.string,
         color: PropTypes.instanceOf(Color).isRequired,
-        now: PropTypes.instanceOf(ZonedDateTime).isRequired,
+        time: PropTypes.instanceOf(ZonedDateTime).isRequired,
         top_percent: PropTypes.number.isRequired
     }
 
     render() {
         const classes = classnames(this.props.className, 'now');
+        const style = {
+            top: `${this.props.top_percent}%`
+        };
 
-        return <time className={classes} dateTime={rfc3339(this.props.now)}/>;
+        return (
+            <time
+                className={classes}
+                style={style}
+                dateTime={rfc3339(this.props.time)}/>
+        );
     }
 }
 
 export default styled(NowIndicator)`
-    top: ${props => props.top_percent}%;
     background-color: ${props => props.color.string()};
     
     &::before {

@@ -2,21 +2,31 @@ import classnames from 'classnames';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import styled from 'styled-components';
 import Swipeable from 'react-swipeable';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ZonedDateTime } from 'js-joda';
 
-import Clock from 'app/component/Clock';
 import Calendar from 'record/Calendar';
-import { rfc3339, hour } from 'date_formatter';
+import Clock from 'app/component/Clock';
+import connected from 'app/decorator/connected';
+import styled from 'app/decorator/styled';
+import { rfc3339, hms } from 'date_formatter';
 
+@connected(state => ({
+    primary: state.getIn(['calendars', 'primary']),
+    time: state.getIn(['application', 'time'])
+}))
+@styled`
+    border: 2px dotted lime;
+    &::after {
+        background-image: ${({ primary }) => (primary.background_image ? `url(${primary.background_image})` : 'none')};
+    }
+`
 class DashPage extends PureComponent {
     static propTypes = {
         className: PropTypes.string,
-        primary: PropTypes.instanceOf(Calendar).isRequired,
         time: PropTypes.instanceOf(ZonedDateTime).isRequired,
+        primary: PropTypes.instanceOf(Calendar).isRequired,
         history: PropTypes.object.isRequired
     }
 
@@ -40,7 +50,7 @@ class DashPage extends PureComponent {
                     <footer>
                         <p>{primary.name}</p>
                         <time dateTime={rfc3339(time)}>
-                            {hour(time)}
+                            {hms(time)}
                         </time>
                     </footer>
                 </Swipeable>
@@ -49,13 +59,4 @@ class DashPage extends PureComponent {
     }
 }
 
-const StyledDashPage = styled(DashPage)`
-    &::after {
-        background-image: ${({ primary }) => (primary.background_image ? `url(${primary.background_image})` : 'none')};
-    }
-`;
-
-export default connect(state => ({
-    primary: state.getIn(['calendars', 'primary']),
-    time: state.getIn(['application', 'time'])
-}))(StyledDashPage);
+export default DashPage;

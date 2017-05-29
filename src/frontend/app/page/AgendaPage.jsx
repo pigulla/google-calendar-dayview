@@ -11,8 +11,9 @@ import { ThemeProvider } from 'styled-components';
 
 import DayView from 'app/component/agenda/DayView';
 import NavigationHeader from 'app/component/agenda/NavigationHeader';
-import { Calendar, Theme } from 'record/';
-import rootFontSize from 'app/decorator/rootFontSize';
+import { Calendar, Theme, Event } from 'record/';
+import root_font_size from 'app/decorator/root_font_size';
+import connected from 'app/decorator/connected';
 
 function calculate_row_height(props) {
     const row_count = props.config.get('day_length').toMinutes() / props.config.get('grid_step').toMinutes();
@@ -20,16 +21,38 @@ function calculate_row_height(props) {
     return `calc((100vh - ${props.config.get('nav_header_height')}) / ${row_count - 1})`;
 }
 
-@rootFontSize(calculate_row_height)
+function map_state_to_props(state, props) {
+    const calendars = state.getIn(['calendars', 'all']);
+    const selected = calendars.find(calendar => calendar.name === props.match.params.name);
+
+    const list = calendars.toList();
+    const index = calendars.valueSeq().indexOf(selected);
+    const next = list.get((index + 1) % list.count());
+    const prev = list.get((index - 1 + list.count()) % list.count());
+
+    return {
+        calendars,
+        selected,
+        theme: selected.theme,
+        next: next === selected ? null : next,
+        prev: prev === selected ? null : prev,
+        upcoming: state.getIn(['calendars', 'upcoming', 'event'], null),
+        primary: state.getIn(['calendars', 'primary']),
+        config: state.getIn(['application', 'agenda_config'])
+    };
+}
+
+@connected(map_state_to_props)
+@root_font_size(calculate_row_height)
 class AgendaPage extends PureComponent {
     static propTypes = {
         calendars: orderedMapOf(PropTypes.instanceOf(Calendar), PropTypes.string).isRequired,
         theme: PropTypes.instanceOf(Theme).isRequired,
+        upcoming: PropTypes.instanceOf(Event),
         primary: PropTypes.instanceOf(Calendar).isRequired,
         selected: PropTypes.instanceOf(Calendar),
         next: PropTypes.instanceOf(Calendar),
         prev: PropTypes.instanceOf(Calendar),
-        now: PropTypes.instanceOf(ZonedDateTime).isRequired,
         match: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired,
         config: contains({
@@ -95,8 +118,8 @@ class AgendaPage extends PureComponent {
                             prev_calendar={this.props.prev}/>
                         <DayView
                             style={{ top: this.props.config.get('nav_header_height') }}
+                            upcoming={this.props.upcoming}
                             events={this.props.selected.events}
-                            now={this.props.now}
                             start_of_agenda={this.props.config.get('start_of_agenda')}
                             day_length={this.props.config.get('day_length')}
                             grid_step={this.props.config.get('grid_step')}/>
@@ -107,23 +130,4 @@ class AgendaPage extends PureComponent {
     }
 }
 
-export default connect(function (state, props) {
-    const calendars = state.getIn(['calendars', 'all']);
-    const selected = calendars.find(calendar => calendar.name === props.match.params.name);
-
-    const list = calendars.toList();
-    const index = calendars.valueSeq().indexOf(selected);
-    const next = list.get((index + 1) % list.count());
-    const prev = list.get((index - 1 + list.count()) % list.count());
-
-    return {
-        calendars,
-        selected,
-        theme: selected.theme,
-        next: next === selected ? null : next,
-        prev: prev === selected ? null : prev,
-        primary: state.getIn(['calendars', 'primary']),
-        now: state.getIn(['application', 'time']),
-        config: state.getIn(['application', 'agenda_config'])
-    };
-})(AgendaPage);
+export default AgendaPage;
