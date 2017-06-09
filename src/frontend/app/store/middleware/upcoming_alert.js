@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 
 import store from 'app/store/';
 import AlertOverlay from 'app/component/AlertOverlay';
-import { set_upcoming_handled, SET_UPCOMING, SET_UPCOMING_HANDLED } from 'app/store/action/calendars';
+import { set_upcoming_handled, SET_UPCOMING, UNSET_UPCOMING, SET_UPCOMING_HANDLED } from 'app/store/action/calendars';
 
 export default ({ getState, dispatch }) => {
     const layer = new Layer(document.body, () =>
@@ -20,7 +20,7 @@ export default ({ getState, dispatch }) => {
 
         if (action.type === SET_UPCOMING) {
             layer.render();
-        } else if (action.type === SET_UPCOMING_HANDLED) {
+        } else if (action.type === SET_UPCOMING_HANDLED || action.type === UNSET_UPCOMING) {
             layer.destroy();
         }
 

@@ -50,6 +50,7 @@ export default function (state = INITIAL_STATE, action = null) {
 
         case Actions.SET_UPCOMING: {
             assert.object(action.payload, 'action.payload');
+
             new_state = new_state.set('upcoming', new ImmutableMap({
                 event: action.payload,
                 handled: false

@@ -1,3 +1,4 @@
+import I, { is } from 'immutable';
 import { SET_TIME } from 'app/store/action/application';
 import {
     set_upcoming,
@@ -25,16 +26,10 @@ export default ({ getState, dispatch }) => next => action => {
     }
 
     const upcoming = calendar.events
-        .find(event => event.in_progress_at(now.plusMinutes(40)) && !event.in_progress_at(now), this, null);
+        .find(event => event.in_progress_at(now.plusMinutes(3)) && !event.in_progress_at(now), this, null);
 
-    // Technically, this check isn't needed but it keeps "action spam" down and there really is no point dispatching
-    // an action that we know won't do anything anyway.
-    if (upcoming !== previous) {
-        if (upcoming) {
-            dispatch(set_upcoming(upcoming));
-        } else {
-            dispatch(unset_upcoming());
-        }
+    if (!is(previous, upcoming)) {
+        dispatch(upcoming ? set_upcoming(upcoming) : unset_upcoming());
     }
 
     return result;

@@ -4,18 +4,19 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import Swipeable from 'react-swipeable';
 import { Link } from 'react-router-dom';
-import { ZonedDateTime } from 'js-joda';
+import { Duration, ZonedDateTime } from 'js-joda';
 
 import Calendar from 'record/Calendar';
 import Clock from 'app/component/Clock';
 import connected from 'app/decorator/connected';
 import styled from 'app/decorator/styled';
-import { rfc3339, hms } from 'date_formatter';
+import { rfc3339, hour } from 'date_formatter';
+import throttled_time from 'app/decorator/throttled_time';
 
 @connected(state => ({
-    primary: state.getIn(['calendars', 'primary']),
-    time: state.getIn(['application', 'time'])
+    primary: state.getIn(['calendars', 'primary'])
 }))
+@throttled_time(Duration.ofSeconds(15))
 @styled`
     border: 2px dotted lime;
     &::after {
@@ -50,7 +51,7 @@ class DashPage extends PureComponent {
                     <footer>
                         <p>{primary.name}</p>
                         <time dateTime={rfc3339(time)}>
-                            {hms(time)}
+                            {hour(time)}
                         </time>
                     </footer>
                 </Swipeable>

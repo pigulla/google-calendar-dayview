@@ -1,7 +1,11 @@
-import { load } from 'app/store/action/calendars';
+import { load, LOAD_SUCCESSFUL, LOAD_FAILED } from 'app/store/action/calendars';
 
-export default interval => store => {
-    setInterval(() => store.dispatch(load()), interval);
+const triggers = new Set([LOAD_SUCCESSFUL, LOAD_FAILED]);
 
-    return next => action => next(action);
+export default interval => store => next => action => {
+    if (triggers.has(action.type)) {
+        setTimeout(() => store.dispatch(load()), interval);
+    }
+
+    return next(action);
 };

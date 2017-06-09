@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'production') {
         upcoming_event,
         upcoming_alert,
         fetch_calendars(60 * 1000),
-        time(60 * 1000),
+        time(1 * 1000),
         thunk_middleware
     ));
 }

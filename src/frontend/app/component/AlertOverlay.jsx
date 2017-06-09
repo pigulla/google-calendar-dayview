@@ -25,8 +25,7 @@ class AlertOverlay extends PureComponent {
         super(...arguments);
 
         this.sound = new Howl({
-            src: [alert_sound],
-            loop: true
+            src: [alert_sound]
         });
     }
 
@@ -75,9 +74,9 @@ export default styled(AlertOverlay)`
         max-width: 75%;
         max-height: 75%;
         border: 1px solid rgb(62, 72, 125);
-        border-radius: 0.3rem;
+        border-radius: 1.5vw;
         color: white;
-        padding: 0.5rem;
+        padding: 3vw;
         background-color: rgb(45, 52, 90);
         display: flex;
         flex-direction: column;
@@ -89,12 +88,12 @@ export default styled(AlertOverlay)`
         }
         
         h2 {
-            font-size: 0.7rem;
+            font-size: 5vw;
         }
         
         h3 {
-            padding: 0.5rem 0;
-            font-size: 0.4rem;
+            padding: 2vw 0;
+            font-size: 3vw;
         }
     }
 `;
