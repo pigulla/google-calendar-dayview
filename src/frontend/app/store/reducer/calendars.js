@@ -33,8 +33,8 @@ export default function (state = INITIAL_STATE, action = null) {
 
     switch (action.type) {
         case Actions.SET_PRIMARY: {
-            const calendar_id = action.payload;
-            const primary = new_state.getIn(['all', calendar_id]);
+            const name = action.payload;
+            const primary = new_state.get('all').find(calendar => calendar.name === name);
 
             assert(primary instanceof Calendar, 'primary');
 

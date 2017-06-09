@@ -8,9 +8,9 @@
     "compile-backend": "babel --out-dir dist/ --ignore src/frontend/ src/ ",
     "compile-frontend": "webpack",
     "eslint": "eslint src/",
-    "xprepublish": "rm -rf dist/ && npm run compile-backend && npm run compile-frontend",
+    "prepublish": "rm -rf dist/ && npm run compile-backend && npm run compile-frontend",
     "develop": "webpack-dev-server",
-    "start": "node dist/cli/index.js"
+    "start": "node dist/backend/cli/index.js"
   },
   "bin": "./dist/cli/index.js",
   "author": "Raphael Pigulla <pigulla@four66.com>",
@@ -37,6 +37,7 @@
     "color": "^1.0.3",
     "console-log-level": "^1.4.0",
     "document-ready-promise": "^3.0.1",
+    "express": "^4.15.3",
     "google-auth-library": "^0.10.0",
     "googleapis": "^19.0.0",
     "howler": "^2.0.3",

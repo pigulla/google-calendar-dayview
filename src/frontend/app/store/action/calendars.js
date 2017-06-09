@@ -37,11 +37,11 @@ export function set_upcoming_handled() {
     };
 }
 
-export function set_primary(calendar_id) {
-    assert.string(calendar_id, 'calendar_id');
+export function set_primary(name) {
+    assert.string(name, 'name');
 
     return function (dispatch) {
-        dispatch(do_set_primary(calendar_id));
+        dispatch(do_set_primary(name));
     };
 }
 

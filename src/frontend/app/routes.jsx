@@ -8,10 +8,10 @@ import DashPage from 'app/page/DashPage';
 import { set_primary } from 'app/store/action/calendars';
 
 const set_primary_and_redirect = connect()(function (props) {
-    const key = props.match.params.key;
+    const name = props.match.params.name;
 
-    props.dispatch(set_primary(key));
-    return <Redirect to={`/calendar/${key}`}/>;
+    props.dispatch(set_primary(name));
+    return <Redirect to={`/calendar/${name}`}/>;
 });
 
 const redirect_to_primary = connect(state => ({ primary: state.getIn(['calendars', 'primary']) }))(function (props) {
@@ -23,8 +23,9 @@ export default (
         <Switch>
             <Route path="/" component={redirect_to_primary} exact/>
             <Route path="/dash" component={DashPage}/>
+            <Route path="/calendar/" component={redirect_to_primary} exact/>
             <Route path="/calendar/:name" component={AgendaPage} exact/>
-            <Route path="/calendar/:key/set-primary" component={set_primary_and_redirect}/>
+            <Route path="/calendar/:name/set-primary" component={set_primary_and_redirect}/>
             <Route component={NotFoundPage}/>
         </Switch>
     </div>
