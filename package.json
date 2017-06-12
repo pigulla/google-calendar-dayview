@@ -1,6 +1,6 @@
 {
   "name": "google-calendar-dayview",
-  "version": "0.0.3-alpha",
+  "version": "0.0.4-alpha",
   "description": "A dead simple dashboard for meeting rooms using Google Calendar",
   "main": "dist/update.js",
   "scripts": {
@@ -12,8 +12,15 @@
     "develop": "webpack-dev-server",
     "start": "node dist/backend/cli/index.js"
   },
+  "files": [
+    "dist/"
+  ],
   "bin": "./dist/backend/cli/index.js",
-  "author": "Raphael Pigulla <pigulla@four66.com>",
+  "author": {
+    "name": "Raphael Pigulla",
+    "email": "pigulla@four66.com",
+    "url": "http://www.n3rd.org"
+  },
   "license": "ISC",
   "keywords": [
     "google-api",
