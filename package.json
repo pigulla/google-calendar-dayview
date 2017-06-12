@@ -1,6 +1,6 @@
 {
   "name": "google-calendar-dayview",
-  "version": "0.0.2",
+  "version": "0.0.2-alpha",
   "description": "A dead simple dashboard for meeting rooms using Google Calendar",
   "main": "dist/update.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "compile-backend": "babel --out-dir dist/ --ignore src/frontend/ src/ ",
     "compile-frontend": "webpack",
     "eslint": "eslint src/",
-    "xprepublish": "rm -rf dist/ && npm run compile-backend && npm run compile-frontend",
+    "prepublishOnly": "rm -rf dist/ && npm run compile-backend && npm run compile-frontend",
     "develop": "webpack-dev-server",
     "start": "node dist/backend/cli/index.js"
   },
@@ -75,8 +75,8 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.3",
-    "eslint": "^3.19.0",
-    "eslint-config-four66": "^3.19.2",
+    "eslint": "^4.0.0",
+    "eslint-config-four66": "^4.0.0",
     "eslint-plugin-react": "^7.0.1",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.11.2",
