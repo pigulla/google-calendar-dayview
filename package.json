@@ -12,7 +12,7 @@
     "develop": "webpack-dev-server",
     "start": "node dist/backend/cli/index.js"
   },
-  "bin": "./dist/cli/index.js",
+  "bin": "./dist/backend/cli/index.js",
   "author": "Raphael Pigulla <pigulla@four66.com>",
   "license": "ISC",
   "keywords": [
