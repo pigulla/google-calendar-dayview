@@ -14,15 +14,15 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import routes from 'app/routes';
 import store from 'app/store/';
 import { load } from 'app/store/action/calendars';
-
 import { hour_formatter } from 'date_formatter';
-import { set_time } from 'app/store/action/application';
+import { query_backlight_support, set_time } from 'app/store/action/application';
 
 joda.use(joda_tz);
 
 (async function () {
     try {
         await store.dispatch(load());
+        await store.dispatch(query_backlight_support());
         await document_ready();
 
         window.set_time = function (time) {

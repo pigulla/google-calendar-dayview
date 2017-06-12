@@ -18,7 +18,6 @@ import throttled_time from 'app/decorator/throttled_time';
 }))
 @throttled_time(Duration.ofSeconds(15))
 @styled`
-    border: 2px dotted lime;
     &::after {
         background-image: ${({ primary }) => (primary.background_image ? `url(${primary.background_image})` : 'none')};
     }

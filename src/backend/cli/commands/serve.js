@@ -1,9 +1,9 @@
-const http = require('http');
 const path = require('path');
 
-const express = require('express');
-
 const { commandify } = require('~/cli/util');
+const server = require('~/server/');
+
+const dist_dir = path.join(__dirname, '..', '..', '..', 'frontend');
 
 module.exports.command = 'serve';
 
@@ -16,9 +16,25 @@ module.exports.builder = {
         requiresArg: true,
         default: '127.0.0.1'
     },
+    directory: {
+        type: 'string',
+        description:
+            'The directory from which the static files will be served. ' +
+            'Path will be relative to the current working directory.',
+        requiresArg: true,
+        normalize: true,
+        default() {
+            return dist_dir;
+        },
+        coerce(input) {
+            return path.isAbsolute(input) ? input : path.join(process.cwd(), input);
+        }
+    },
     datafile: {
         type: 'string',
-        description: 'The data file generated via the "update" command. Paths will be relative to the current working directory',
+        description:
+            'The data file generated via the "update" command. ' +
+            'Path will be relative to the current working directory.',
         demandOption: true,
         requiresArg: true,
         normalize: true,
@@ -41,18 +57,9 @@ module.exports.builder = {
     }
 };
 
-module.exports.handler = commandify(async function (argv) {
-    const dist_dir = path.join(__dirname, '..', '..', '..', 'frontend');
-    const app = express();
-    const server = http.Server(app);
-
-    app.use(express.static(dist_dir));
-    app.get('/calendars.json', (request, response) => response.sendFile(argv.datafile));
-    app.get('*', (request, response) => response.sendFile(path.join(dist_dir, 'index.html')));
-
-    server.listen(argv.port, argv.interface, function () {
-        const { address, port } = server.address();
-
-        console.log(`Server listening on ${address} at port ${port}`);
-    });
-});
+module.exports.handler = commandify(argv => server({
+    bind_interface: argv.interface,
+    bind_port: argv.port,
+    directory: argv.directory,
+    datafile: argv.datafile
+}));

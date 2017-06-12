@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import NotFoundPage from 'app/page/NotFoundPage';
 import AgendaPage from 'app/page/AgendaPage';
 import DashPage from 'app/page/DashPage';
+import DimContainer from 'app/component/DimContainer';
 import { set_primary } from 'app/store/action/calendars';
 
 const set_primary_and_redirect = connect()(function (props) {
@@ -19,7 +20,7 @@ const redirect_to_primary = connect(state => ({ primary: state.getIn(['calendars
 });
 
 export default (
-    <div className="router-container">
+    <DimContainer>
         <Switch>
             <Route path="/" component={redirect_to_primary} exact/>
             <Route path="/dash" component={DashPage}/>
@@ -28,5 +29,5 @@ export default (
             <Route path="/calendar/:name/set-primary" component={set_primary_and_redirect}/>
             <Route component={NotFoundPage}/>
         </Switch>
-    </div>
+    </DimContainer>
 );

@@ -1,7 +1,7 @@
 @import 'common';
 
 // Fix font size for DevTools
-.router-container > :first-child:not(.router-container) {
+.dim-container > :first-child:not(.dim-container) {
     font-size: 12px;
 }
 
