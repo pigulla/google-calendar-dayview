@@ -146,11 +146,13 @@ class DayView extends PureComponent {
 }
 
 export default styled(withTheme(DayView))`
-    time.full {
-        border-top-color: ${props => props.theme.grid.alpha(0.3).string()};
-    }
-
-    time:not(.full)::after {
-        border-top-color: ${props => props.theme.grid.alpha(0.2).string()};
+    .day > time {
+        &.full {
+            border-top-color: ${props => props.theme.grid.alpha(0.3).string()};
+        }
+    
+        &:not(.full)::after {
+            border-top-color: ${props => props.theme.grid.alpha(0.2).string()};
+        }
     }
 `;
