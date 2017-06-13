@@ -1,10 +1,15 @@
 import classnames from 'classnames';
 import React, { PureComponent, Children } from 'react';
+import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 
 import { connected, styled } from 'app/decorator/';
 import { set_brightness } from 'app/store/action/application';
 
+// The router is injected to avoid blocked updates.
+// See https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/guides/blocked-updates.md
+
+@withRouter
 @connected(state => ({
     is_idle: state.getIn(['application', 'is_idle']),
     brightness_supported: state.getIn(['application', 'backlight_support', 'brightness'])
@@ -15,6 +20,7 @@ import { set_brightness } from 'app/store/action/application';
 `
 export default class DimContainer extends PureComponent {
     static propTypes = {
+        location: PropTypes.object.isRequired,
         dispatch: PropTypes.func.isRequired,
         className: PropTypes.string,
         children: PropTypes.node,

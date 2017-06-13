@@ -5,7 +5,7 @@ import { Duration } from 'js-joda';
 import { set_idle, unset_idle, last_activity, LAST_ACTIVITY, SET_TIME } from 'app/store/action/application';
 
 const triggers = new Set([LAST_ACTIVITY, SET_TIME]);
-const idle_after = Duration.ofSeconds(15);
+const idle_after = Duration.ofSeconds(60);
 
 export default (document, wait) => ({ getState, dispatch }) => {
     assert.object(document, 'document');
