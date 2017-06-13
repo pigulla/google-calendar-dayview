@@ -7,10 +7,6 @@ const INITIAL_STATE = new ImmutableMap({
     time_zone: ZoneId.systemDefault(),
     last_activity: ZonedDateTime.now(),
     is_idle: false,
-    backlight_support: new ImmutableMap({
-        power: false,
-        brightness: false
-    }),
     time: ZonedDateTime.now(),
     agenda_config: new ImmutableMap({
         day_length: Duration.ofHours(11),
@@ -26,19 +22,6 @@ export default function (previous_state = INITIAL_STATE, action = null) {
     let new_state = previous_state;
 
     switch (action.type) {
-        case Actions.QUERY_BACKLIGHT_SUPPORT_SUCCESSFUL: {
-            const { brightness, power } = action.payload;
-            new_state = new_state.setIn(['backlight_support', 'power'], power);
-            new_state = new_state.setIn(['backlight_support', 'brightness'], brightness);
-            break;
-        }
-
-        case Actions.QUERY_BACKLIGHT_SUPPORT_FAILED: {
-            new_state = new_state.setIn(['backlight_support', 'power'], false);
-            new_state = new_state.setIn(['backlight_support', 'brightness'], false);
-            break;
-        }
-
         case Actions.LAST_ACTIVITY: {
             new_state = new_state.set('last_activity', new_state.get('time'));
             break;

@@ -1,9 +1,11 @@
 import application from './application';
+import backend_capability from './backend_capability';
 import calendars from './calendars';
 import users from './users';
 
 const reducers = {
     application,
+    backend_capability,
     calendars,
     users
 };

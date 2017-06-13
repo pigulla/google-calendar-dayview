@@ -12,7 +12,7 @@ import { set_brightness } from 'app/store/action/application';
 @withRouter
 @connected(state => ({
     is_idle: state.getIn(['application', 'is_idle']),
-    brightness_supported: state.getIn(['application', 'backlight_support', 'brightness'])
+    brightness_supported: state.getIn(['backend_capability', 'backlight_brightness'])
 }))
 @styled`
     opacity: ${({ is_idle, brightness_supported }) => ((is_idle && !brightness_supported) ? 0.2 : 1.0)};

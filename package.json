@@ -9,7 +9,7 @@
     "compile-backend": "babel --out-dir dist/ --ignore src/frontend/ src/ ",
     "compile-frontend": "NODE_ENV=production webpack",
     "eslint": "eslint src/",
-    "prepublishOnly": "rm -rf dist/ && npm run compile-backend && npm run compile-frontend",
+    "prepublish": "npm test && rm -rf dist/ && npm run compile-backend && npm run compile-frontend",
     "start": "node dist/backend/cli/index.js"
   },
   "files": [
@@ -43,7 +43,6 @@
     "classnames": "^2.2.5",
     "clipboardy": "^1.1.1",
     "color": "^1.0.3",
-    "console-log-level": "^1.4.0",
     "document-ready-promise": "^3.0.1",
     "express": "^4.15.3",
     "google-auth-library": "^0.10.0",

@@ -26,7 +26,6 @@
         @include absolute();
 
         div {
-            transition: transform 1s linear;
             background-color: $hand-color;
             position: absolute;
             transform-origin: 50% 100%;

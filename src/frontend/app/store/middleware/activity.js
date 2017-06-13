@@ -22,15 +22,16 @@ export default (document, wait) => ({ getState, dispatch }) => {
         const result = next(action);
 
         if (triggers.has(action.type)) {
+            const upcoming = getState().getIn(['calendars', 'upcoming', 'event'], null);
             const last = getState().getIn(['application', 'last_activity']);
             const time = getState().getIn(['application', 'time']);
             const is_idle = getState().getIn(['application', 'is_idle']);
 
             const idle_time = Duration.between(last, time);
 
-            if (!is_idle && idle_time.compareTo(idle_after) > 0) {
+            if (!is_idle && idle_time.compareTo(idle_after) > 0 && !upcoming) {
                 dispatch(set_idle());
-            } else if (is_idle && idle_time.compareTo(idle_after) < 0) {
+            } else if (is_idle && (idle_time.compareTo(idle_after) < 0 || upcoming)) {
                 dispatch(unset_idle());
             }
         }
