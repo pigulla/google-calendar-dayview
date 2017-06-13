@@ -3,7 +3,6 @@ const google = require('googleapis');
 const Promise = require('bluebird');
 const { Set: ImmutableSet } = require('immutable');
 
-const logger = require('./logger');
 const Event = require('@/record/Event');
 const Calendar = require('@/record/Calendar');
 const Theme = require('@/record/Theme');
@@ -40,8 +39,6 @@ async function load_calendars(oauth_client, calendars_configs, day, time_zone) {
         const events = raw_events
             .map(event => Event.parse(event))
             .filter(event => event.confirmed);
-
-        logger.debug(`Calendar "${calendar_config.name}" loaded successfully`);
 
         return new Calendar({
             ...config,
