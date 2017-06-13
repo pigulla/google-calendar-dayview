@@ -4,12 +4,12 @@
   "description": "A dead simple dashboard for meeting rooms using Google Calendar",
   "main": "dist/update.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run lint",
+    "lint": "eslint src",
     "compile-backend": "babel --out-dir dist/ --ignore src/frontend/ src/ ",
-    "compile-frontend": "webpack",
+    "compile-frontend": "NODE_ENV=production webpack",
     "eslint": "eslint src/",
     "prepublishOnly": "rm -rf dist/ && npm run compile-backend && npm run compile-frontend",
-    "develop": "webpack-dev-server",
     "start": "node dist/backend/cli/index.js"
   },
   "files": [
@@ -69,9 +69,8 @@
     "redux-actions": "^2.0.3",
     "redux-thunk": "^2.2.0",
     "styled-components": "^2.0.1",
-    "superstatic": "^4.1.0",
     "whatwg-fetch": "^2.0.3",
-    "yargs": "^8.0.1"
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -86,7 +85,7 @@
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.3",
     "eslint": "^4.0.0",
-    "eslint-config-four66": "^4.0.0",
+    "eslint-config-four66": "^4.0.1",
     "eslint-plugin-react": "^7.0.1",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.11.2",
@@ -100,7 +99,6 @@
     "style-loader": "^0.18.2",
     "svg-inline-loader": "^0.7.1",
     "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.4.5",
-    "webpack-merge": "^4.1.0"
+    "webpack-dev-server": "^2.4.5"
   }
 }

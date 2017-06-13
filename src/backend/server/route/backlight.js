@@ -25,9 +25,11 @@ module.exports = function (app) {
         } else {
             try {
                 if ('brightness' in result.value) {
+                    console.log(`Setting backlight brightness to ${result.value}`);
                     await set_brightness(result.value.brightness);
                 }
                 if ('backlight' in result.value) {
+                    console.log(`Turning backlight power ${result.value ? 'ON' : 'OFF'}`);
                     await enable_backlight(result.value.backlight);
                 }
 

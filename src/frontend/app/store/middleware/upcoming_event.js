@@ -1,4 +1,4 @@
-import I, { is } from 'immutable';
+import { is } from 'immutable';
 import { SET_TIME } from 'app/store/action/application';
 import {
     set_upcoming,

@@ -14,8 +14,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import routes from 'app/routes';
 import store from 'app/store/';
 import { load } from 'app/store/action/calendars';
-import { hour_formatter } from 'date_formatter';
-import { query_backlight_support, set_time } from 'app/store/action/application';
+import { query_backlight_support } from 'app/store/action/application';
 
 joda.use(joda_tz);
 
@@ -24,12 +23,6 @@ joda.use(joda_tz);
         await store.dispatch(load());
         await store.dispatch(query_backlight_support());
         await document_ready();
-
-        window.set_time = function (time) {
-            const new_time = joda.LocalTime.parse(time, hour_formatter).atDate(joda.LocalDate.now());
-
-            store.dispatch(set_time(new_time));
-        };
 
         ReactDOM.render(
             <Provider store={store}>

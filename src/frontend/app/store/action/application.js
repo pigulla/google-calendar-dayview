@@ -28,7 +28,6 @@ const query_backlight_support_failed = createAction(QUERY_BACKLIGHT_SUPPORT_FAIL
 const set_brightness_start = createAction(SET_BRIGHTNESS_START);
 const set_brightness_successful = createAction(SET_BRIGHTNESS_SUCCESSFUL);
 const set_brightness_failed = createAction(SET_BRIGHTNESS_FAILED);
- 
 
 export function set_idle() {
     return function (dispatch) {

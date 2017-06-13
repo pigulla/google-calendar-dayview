@@ -9,7 +9,7 @@ const INITIAL_STATE = new ImmutableMap({
     is_idle: false,
     backlight_support: new ImmutableMap({
         power: false,
-        brightness: false,
+        brightness: false
     }),
     time: ZonedDateTime.now(),
     agenda_config: new ImmutableMap({
