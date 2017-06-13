@@ -1,12 +1,11 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { connect } from 'react-redux';
-import { orderedMapOf, contains } from 'react-immutable-proptypes';
-import { ZonedDateTime, Duration, LocalTime } from 'js-joda';
-import { Redirect } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
+import PropTypes from 'prop-types';
+import React, { PureComponent } from 'react';
 import Swipeable from 'react-swipeable';
+import { Duration, LocalTime } from 'js-joda';
+import { orderedMapOf, contains } from 'react-immutable-proptypes';
+import { Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import DayView from 'app/component/agenda/DayView';
@@ -33,7 +32,7 @@ function map_state_to_props(state, props) {
     return {
         calendars,
         selected,
-        theme: selected.theme,
+        theme: selected ? selected.theme : null,
         next: next === selected ? null : next,
         prev: prev === selected ? null : prev,
         upcoming: state.getIn(['calendars', 'upcoming', 'event'], null),
@@ -47,7 +46,7 @@ function map_state_to_props(state, props) {
 class AgendaPage extends PureComponent {
     static propTypes = {
         calendars: orderedMapOf(PropTypes.instanceOf(Calendar), PropTypes.string).isRequired,
-        theme: PropTypes.instanceOf(Theme).isRequired,
+        theme: PropTypes.instanceOf(Theme),
         upcoming: PropTypes.instanceOf(Event),
         primary: PropTypes.instanceOf(Calendar).isRequired,
         selected: PropTypes.instanceOf(Calendar),
@@ -67,7 +66,7 @@ class AgendaPage extends PureComponent {
         super(props, context);
 
         this.state = {
-            theme: props.theme.asPOJO()
+            theme: props.theme ? props.theme.asPOJO() : null
         };
     }
 
@@ -75,7 +74,7 @@ class AgendaPage extends PureComponent {
         // The ThemeProvider only accepts POJOs. To avoid unnecessary re-renderings, do not do this conversion on the
         // fly in the render method but only do it once when it changes.
         this.setState({
-            theme: next_props.theme.asPOJO()
+            theme: next_props.theme ? next_props.theme.asPOJO() : null
         });
     }
 
@@ -116,6 +115,7 @@ class AgendaPage extends PureComponent {
                             title={this.props.match.params.name}
                             next_calendar={this.props.next}
                             prev_calendar={this.props.prev}/>
+
                         <DayView
                             style={{ top: this.props.config.get('nav_header_height') }}
                             upcoming={this.props.upcoming}
