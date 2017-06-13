@@ -12,6 +12,18 @@ const server = require('~/server/');
 const dist_dir = path.join(__dirname, '..', '..', '..', 'frontend');
 const { ZoneId } = joda;
 
+function absolutize(input) {
+    return path.isAbsolute(input) ? input : path.join(process.cwd(), input);
+}
+
+function to_int(input, message) {
+    if (!/^\d+$/.test(input)) {
+        throw new Error(message);
+    }
+
+    return parseInt(input, 10);
+}
+
 module.exports.command = 'serve';
 
 module.exports.describe = 'Start server';
@@ -30,12 +42,8 @@ module.exports.builder = {
             'Path will be relative to the current working directory.',
         requiresArg: true,
         normalize: true,
-        default() {
-            return dist_dir;
-        },
-        coerce(input) {
-            return path.isAbsolute(input) ? input : path.join(process.cwd(), input);
-        }
+        default: dist_dir,
+        coerce: absolutize
     },
     credentials: {
         type: 'string',
@@ -43,9 +51,7 @@ module.exports.builder = {
         demandOption: true,
         requiresArg: true,
         normalize: true,
-        coerce(input) {
-            return path.isAbsolute(input) ? input : path.join(process.cwd(), input);
-        }
+        coerce: absolutize
     },
     token: {
         type: 'string',
@@ -53,9 +59,7 @@ module.exports.builder = {
         demandOption: true,
         requiresArg: true,
         normalize: true,
-        coerce(input) {
-            return path.isAbsolute(input) ? input : path.join(process.cwd(), input);
-        }
+        coerce: absolutize
     },
     calendars: {
         type: 'string',
@@ -64,7 +68,7 @@ module.exports.builder = {
         requiresArg: true,
         coerce(input) {
             // This function can not be asynchronous :-(
-            const file = path.isAbsolute(input) ? input : path.join(process.cwd(), input);
+            const file = absolutize(input);
             const buffer = fs.readFileSync(file, 'utf-8');
             const config = JSON.parse(buffer);
             const result = Joi.validate(config, calendars_schema, { convert: false });
@@ -94,11 +98,7 @@ module.exports.builder = {
         requiresArg: true,
         default: 8080,
         coerce(input) {
-            if (!/^\d+$/.test(input)) {
-                throw new Error('Invalid port');
-            }
-
-            return parseInt(input, 10);
+            return to_int(input, 'Invalid value for option "port"');
         }
     },
     'refresh-after': {
@@ -107,11 +107,7 @@ module.exports.builder = {
         requiresArg: true,
         default: 5 * 60,
         coerce(input) {
-            if (!/^\d+$/.test(input)) {
-                throw new Error('Invalid refresh value');
-            }
-
-            return parseInt(input, 10);
+            return to_int(input, 'Invalid value for option "refresh-after"');
         }
     }
 };
@@ -124,8 +120,8 @@ module.exports.handler = commandify(async function (argv) {
         bind_interface: argv.interface,
         bind_port: argv.port,
         directory: argv.directory,
-        time_zone: argv['time-zone'],
-        refresh_after: argv['refresh-after'],
+        time_zone: argv.timeZone,
+        refresh_after: argv.refreshAfter,
         credentials,
         token,
         calendars: argv.calendars
