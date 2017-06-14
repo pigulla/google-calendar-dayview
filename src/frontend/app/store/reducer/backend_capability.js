@@ -1,3 +1,4 @@
+import { handle } from 'redux-pack';
 import { Map as ImmutableMap } from 'immutable';
 
 import * as Actions from 'app/store/action/backend_capability';
@@ -7,26 +8,26 @@ const INITIAL_STATE = new ImmutableMap({
     backlight_brightness: false
 });
 
-export default function (previous_state = INITIAL_STATE, action = null) {
-    let new_state = previous_state;
-
+export default function (state = INITIAL_STATE, action = null) {
     switch (action.type) {
-        case Actions.QUERY_BACKLIGHT_SUPPORT_SUCCESSFUL: {
-            const { brightness, power } = action.payload;
-            new_state = new_state.set('backlight_power', power);
-            new_state = new_state.set('backlight_brightness', brightness);
-            break;
-        }
-
-        case Actions.QUERY_BACKLIGHT_SUPPORT_FAILED: {
-            new_state = new_state.set('backlight_power', false);
-            new_state = new_state.set('backlight_brightness', false);
-            break;
+        case Actions.QUERY_BACKLIGHT_SUPPORT: {
+            return handle(state, action, {
+                success(prev_state) {
+                    const { brightness, power } = action.payload;
+                    return prev_state
+                        .set('backlight_power', power)
+                        .set('backlight_brightness', brightness);
+                },
+                failure(prev_state) {
+                    console.error(action.type, action.payload); // eslint-disable-line no-console
+                    return prev_state
+                        .set('backlight_power', false)
+                        .set('backlight_brightness', false);
+                }
+            });
         }
 
         default:
-            break;
+            return state;
     }
-
-    return new_state;
 }

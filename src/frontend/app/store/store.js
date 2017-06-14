@@ -2,6 +2,7 @@
 
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunk_middleware from 'redux-thunk';
+import { middleware as redux_pack_middleware } from 'redux-pack';
 import { Map as ImmutableMap } from 'immutable';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
@@ -19,12 +20,13 @@ let enhancer;
 
 if (process.env.NODE_ENV === 'production') {
     enhancer = compose(applyMiddleware(
+        thunk_middleware,
+        redux_pack_middleware,
         activity(document, 5000),
         upcoming_event,
         upcoming_alert,
         fetch_calendars(60 * 1000),
-        time(5 * 1000),
-        thunk_middleware
+        time(5 * 1000)
     ));
 } else {
     const composeEnhancers = composeWithDevTools({
@@ -32,12 +34,13 @@ if (process.env.NODE_ENV === 'production') {
     });
 
     enhancer = composeEnhancers(applyMiddleware(
+        thunk_middleware,
+        redux_pack_middleware,
         activity(document, 5000),
         upcoming_event,
         upcoming_alert,
         fetch_calendars(60 * 1000),
-        time(1 * 1000),
-        thunk_middleware
+        time(1 * 1000)
     ));
 }
 

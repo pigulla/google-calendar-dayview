@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 
 import { connected, styled } from 'app/decorator/';
-import { set_brightness } from 'app/store/action/application';
+import { set_brightness } from 'app/store/action/backend_capability';
 
 // The router is injected to avoid blocked updates.
 // See https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/guides/blocked-updates.md

@@ -1,4 +1,5 @@
 import assert from 'assert-plus';
+import { handle } from 'redux-pack';
 import { OrderedMap, Map as ImmutableMap } from 'immutable';
 import { ZonedDateTime } from 'js-joda';
 
@@ -29,63 +30,59 @@ function update_primary_from_localstorage(state) {
 }
 
 export default function (state = INITIAL_STATE, action = null) {
-    let new_state = state;
-
     switch (action.type) {
         case Actions.SET_PRIMARY: {
             const name = action.payload;
-            const primary = new_state.get('all').find(calendar => calendar.name === name);
+            const primary = state.get('all').find(calendar => calendar.name === name);
 
             assert(primary instanceof Calendar, 'primary');
 
             localStorage.setItem('primary', primary.id);
-            new_state = new_state.set('primary', primary);
-            break;
+            return state.set('primary', primary);
         }
 
         case Actions.UNSET_UPCOMING: {
-            new_state = new_state.set('upcoming', null);
-            break;
+            return state.set('upcoming', null);
         }
 
         case Actions.SET_UPCOMING: {
             assert.object(action.payload, 'action.payload');
 
-            new_state = new_state.set('upcoming', new ImmutableMap({
+            return state.set('upcoming', new ImmutableMap({
                 event: action.payload,
                 handled: false
             }));
-            break;
         }
 
         case Actions.SET_UPCOMING_HANDLED: {
-            assert.object(new_state.get('upcoming'), 'state.upcoming');
+            assert.object(state.get('upcoming'), 'state.upcoming');
 
-            new_state = new_state.setIn(['upcoming', 'handled'], true);
-            break;
+            return state.setIn(['upcoming', 'handled'], true);
         }
 
-        case Actions.LOAD_SUCCESSFUL: {
-            const current_map = new_state.get('all');
-            const next_map = new ImmutableMap(action.payload.calendars.map(v => [v.id, Calendar.fromJSON(v)]));
+        case Actions.LOAD: {
+            return handle(state, action, {
+                success(prev_state) {
+                    let new_state = prev_state;
+                    const current_map = prev_state.get('all');
+                    const next_map = new ImmutableMap(action.payload.calendars.map(v => [v.id, Calendar.fromJSON(v)]));
 
-            new_state = new_state.set('updated', ZonedDateTime.parse(action.payload.updated));
-            new_state = new_state.set('all', update_map_differential(current_map, next_map));
+                    new_state = new_state.set('updated', ZonedDateTime.parse(action.payload.updated));
+                    new_state = new_state.set('all', update_map_differential(current_map, next_map));
 
-            if (!new_state.get('all').includes(new_state.get('primary'))) {
-                new_state = update_primary_from_localstorage(new_state);
-            }
+                    if (!new_state.get('all').includes(new_state.get('primary'))) {
+                        new_state = update_primary_from_localstorage(new_state);
+                    }
 
-            break;
+                    return new_state;
+                },
+                failure(prev_state) {
+                    console.error(action.type, action.payload); // eslint-disable-line no-console
+                }
+            });
         }
-
-        case Actions.LOAD_FAILED:
-            console.error(action.type, action.payload); // eslint-disable-line no-console
-            break;
 
         default:
-            break;
+            return state;
     }
-
-    return new_state;
 }

@@ -18,46 +18,37 @@ const INITIAL_STATE = new ImmutableMap({
 
 const agenda_config_keys = [...INITIAL_STATE.get('agenda_config').keys()];
 
-export default function (previous_state = INITIAL_STATE, action = null) {
-    let new_state = previous_state;
-
+export default function (state = INITIAL_STATE, action = null) {
     switch (action.type) {
         case Actions.LAST_ACTIVITY: {
-            new_state = new_state.set('last_activity', new_state.get('time'));
-            break;
+            return state.set('last_activity', state.get('time'));
         }
 
         case Actions.SET_IDLE: {
-            new_state = new_state.set('is_idle', true);
-            break;
+            return state.set('is_idle', true);
         }
 
         case Actions.UNSET_IDLE: {
-            new_state = new_state.set('is_idle', false);
-            break;
+            return state.set('is_idle', false);
         }
 
         case Actions.SET_TIME: {
-            new_state = new_state.set('time', action.payload.atZone(new_state.get('time_zone')));
-            break;
+            return state.set('time', action.payload.atZone(state.get('time_zone')));
         }
 
         case Actions.SET_TIME_ZONE: {
-            new_state = new_state.set('time_zone', action.payload);
-            new_state = new_state.set('time', new_state.get('time').withZoneSameInstant(action.payload));
-            break;
+            return state
+                .set('time_zone', action.payload)
+                .set('time', state.get('time').withZoneSameInstant(action.payload));
         }
 
         case Actions.CONFIGURE_AGENDA: {
-            new_state = agenda_config_keys
+            return agenda_config_keys
                 .filter(key => action.payload[key] !== undefined)
-                .reduce((state, key) => state.setIn(['agenda_config', key], action.payload[key]), new_state);
-            break;
+                .reduce((s, key) => s.setIn(['agenda_config', key], action.payload[key]), state);
         }
 
         default:
-            break;
+            return state;
     }
-
-    return new_state;
 }
