@@ -1,5 +1,4 @@
 import assert from 'assert-plus';
-import JSONs from 'json-strictify';
 import { createAction } from 'redux-actions';
 import { Duration, LocalTime, ZoneId, LocalDateTime } from 'js-joda';
 
