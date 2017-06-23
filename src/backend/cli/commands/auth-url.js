@@ -1,5 +1,5 @@
 const { commandify, load_json } = require('~/cli/util');
-const { init_oauth_client, get_oauth_url } = require('~/cli/lib/oauth_client');
+const { init_oauth_client, get_oauth_url } = require('~/lib/oauth_client');
 
 module.exports.command = 'auth-url';
 

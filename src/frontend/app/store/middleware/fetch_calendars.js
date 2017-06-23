@@ -1,9 +1,11 @@
-import { load, LOAD_SUCCESSFUL, LOAD_FAILED } from 'app/store/action/calendars';
+import { KEY, LIFECYCLE } from 'redux-pack/src/constants';
 
-const triggers = new Set([LOAD_SUCCESSFUL, LOAD_FAILED]);
+import { load, LOAD } from 'app/store/action/calendars';
+
+const lifecycle_triggers = new Set([LIFECYCLE.FAILURE, LIFECYCLE.SUCCESS]);
 
 export default interval => store => next => action => {
-    if (triggers.has(action.type)) {
+    if (action.type === LOAD && lifecycle_triggers.has(action.meta[KEY.LIFECYCLE])) {
         setTimeout(() => store.dispatch(load()), interval);
     }
 

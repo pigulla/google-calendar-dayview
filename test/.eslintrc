@@ -1,0 +1,10 @@
+{
+    "env": {
+        "mocha": true
+    },
+    "globals": {
+        "require_app": false,
+        "require_backend": false,
+        "require_isomorphic": false
+    }
+}

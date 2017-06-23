@@ -1,9 +1,4 @@
 @import 'common';
 
-// Fix font size for DevTools
-.dim-container > :first-child:not(.dim-container) {
-    font-size: 12px;
-}
-
 @import 'agenda-page';
 @import 'dash-page';

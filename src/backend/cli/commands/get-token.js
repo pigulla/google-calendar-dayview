@@ -1,7 +1,7 @@
 const Promise = require('bluebird');
 
 const { commandify, load_json } = require('~/cli/util');
-const { init_oauth_client } = require('~/cli/lib/oauth_client');
+const { init_oauth_client } = require('~/lib/oauth_client');
 
 module.exports.command = 'get-token';
 
