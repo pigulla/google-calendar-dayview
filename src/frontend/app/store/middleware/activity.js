@@ -2,7 +2,14 @@ import assert from 'assert-plus';
 import throttle from 'lodash.throttle';
 import { Duration } from 'js-joda';
 
-import { set_idle, unset_idle, last_activity, LAST_ACTIVITY, SET_TIME } from 'app/store/action/application';
+import {
+    set_touch_capability,
+    set_idle,
+    unset_idle,
+    last_activity,
+    LAST_ACTIVITY,
+    SET_TIME
+} from 'app/store/action/application';
 
 const triggers = new Set([LAST_ACTIVITY, SET_TIME]);
 const idle_after = Duration.ofSeconds(60);
@@ -11,12 +18,18 @@ export default (document, wait) => ({ getState, dispatch }) => {
     assert.object(document, 'document');
     assert.finite(wait, 'wait');
 
-    const handler = throttle(() => dispatch(last_activity()), wait, { leading: true, trailing: true });
+    const on_activity = throttle(() => dispatch(last_activity()), wait, { leading: true, trailing: true });
 
-    document.addEventListener('touchstart', handler);
-    document.addEventListener('mousemove', handler);
-    document.addEventListener('click', handler);
-    document.addEventListener('keydown', handler);
+    document.addEventListener('touchstart', on_touch_start);
+    document.addEventListener('touchstart', on_activity);
+    document.addEventListener('mousemove', on_activity);
+    document.addEventListener('click', on_activity);
+    document.addEventListener('keydown', on_activity);
+
+    function on_touch_start() {
+        dispatch(set_touch_capability(true));
+        document.removeEventListener('touchstart', on_touch_start);
+    }
 
     return next => action => {
         const result = next(action);

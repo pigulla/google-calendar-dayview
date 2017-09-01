@@ -2,6 +2,7 @@ import assert from 'assert-plus';
 import { createAction } from 'redux-actions';
 import { Duration, LocalTime, ZoneId, LocalDateTime } from 'js-joda';
 
+export const SET_TOUCH_CAPABILITY = 'APPLICATION_SET_TOUCH_CAPABILITY';
 export const SET_IDLE = 'APPLICATION_SET_IDLE';
 export const UNSET_IDLE = 'APPLICATION_UNSET_IDLE';
 export const LAST_ACTIVITY = 'APPLICATION_LAST_ACTIVITY';
@@ -9,12 +10,21 @@ export const SET_TIME = 'APPLICATION_SET_TIME';
 export const SET_TIME_ZONE = 'APPLICATION_SET_TIME_ZONE';
 export const CONFIGURE_AGENDA = 'APPLICATION_CONFIGURE_AGENDA';
 
+const do_set_touch_capability = createAction(SET_TOUCH_CAPABILITY);
 const do_set_idle = createAction(SET_IDLE);
 const do_unset_idle = createAction(UNSET_IDLE);
 const do_last_activity = createAction(LAST_ACTIVITY);
 const do_set_time = createAction(SET_TIME);
 const do_set_time_zone = createAction(SET_TIME_ZONE);
 const do_configure_agenda = createAction(CONFIGURE_AGENDA);
+
+export function set_touch_capability(capable) {
+    assert.bool(capable, 'capable');
+
+    return function (dispatch) {
+        dispatch(do_set_touch_capability(capable));
+    };
+}
 
 export function set_idle() {
     return function (dispatch) {
