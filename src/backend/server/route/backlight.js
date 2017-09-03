@@ -1,7 +1,15 @@
 const Joi = require('joi');
 
-const { get_support, enable_backlight, set_brightness } = require('~/server/lib/raspberry_pi_touchscreen_control');
-const { NO_CONTENT, UNPROCESSABLE_ENTITY, NOT_IMPLEMENTED } = require('http-status-codes');
+const {
+    get_support,
+    enable_backlight,
+    set_brightness
+} = require('~/server/lib/raspberry_pi_touchscreen_control');
+const {
+    NO_CONTENT,
+    UNPROCESSABLE_ENTITY,
+    NOT_IMPLEMENTED
+} = require('http-status-codes');
 
 const SCHEMA = Joi.object({
     brightness: Joi.number().integer().min(0).max(255),

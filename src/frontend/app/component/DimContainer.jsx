@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React, { PureComponent, Children } from 'react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
+import BodyClassName from 'react-body-classname';
 
 import { connected, styled } from 'app/decorator/';
 import { set_brightness } from 'app/store/action/backend_capability';
@@ -12,6 +13,7 @@ import { set_brightness } from 'app/store/action/backend_capability';
 @withRouter
 @connected(state => ({
     is_idle: state.getIn(['application', 'is_idle']),
+    touch_capable: state.getIn(['application', 'touch_capable']),
     brightness_supported: state.getIn(['backend_capability', 'backlight_brightness'])
 }))
 @styled`
@@ -25,6 +27,7 @@ export default class DimContainer extends PureComponent {
         className: PropTypes.string,
         children: PropTypes.node,
         is_idle: PropTypes.bool.isRequired,
+        touch_capable: PropTypes.bool.isRequired,
         brightness_supported: PropTypes.bool.isRequired
     }
 
@@ -36,11 +39,14 @@ export default class DimContainer extends PureComponent {
 
     render() {
         const classes = classnames('dim-container', this.props.className);
+        const body_classes = classnames({ 'touch-capable': this.props.touch_capable });
 
         return (
-            <div className={classes}>
-                {Children.only(this.props.children)}
-            </div>
+            <BodyClassName className={body_classes}>
+                <div className={classes}>
+                    {Children.only(this.props.children)}
+                </div>
+            </BodyClassName>
         );
     }
 }

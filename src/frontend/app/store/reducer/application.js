@@ -4,6 +4,7 @@ import { Map as ImmutableMap } from 'immutable';
 import * as Actions from 'app/store/action/application';
 
 const INITIAL_STATE = new ImmutableMap({
+    touch_capable: false,
     time_zone: ZoneId.systemDefault(),
     last_activity: ZonedDateTime.now(),
     is_idle: false,
@@ -20,6 +21,10 @@ const agenda_config_keys = [...INITIAL_STATE.get('agenda_config').keys()];
 
 export default function (state = INITIAL_STATE, action = null) {
     switch (action.type) {
+        case Actions.SET_TOUCH_CAPABILITY: {
+            return state.set('touch_capable', action.payload);
+        }
+
         case Actions.LAST_ACTIVITY: {
             return state.set('last_activity', state.get('time'));
         }

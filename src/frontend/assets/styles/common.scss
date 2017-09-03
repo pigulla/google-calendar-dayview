@@ -29,3 +29,7 @@ ul, ol {
 html, body, #root, .dim-container {
     height: 100%;
 }
+
+body.touch-capable {
+    cursor: none;
+}
