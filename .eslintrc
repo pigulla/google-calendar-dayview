@@ -25,6 +25,7 @@
     "rules": {
         "newline-after-var": "off",
         "no-mixed-operators": "off",
+        "no-catch-shadow": "off",
 
         "promise/always-return": "error",
         "promise/no-return-wrap": "error",
