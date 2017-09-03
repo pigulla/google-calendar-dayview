@@ -20,7 +20,9 @@ module.exports = async function (app, { time_zone, credentials, token, calendars
     }
 
     app.get('/calendars.json', async function (request, response) {
-        if (Duration.between(data.updated, ZonedDateTime.now()).compareTo(cache_for) > 0) {
+        const refresh_required = Duration.between(data.updated, ZonedDateTime.now()).compareTo(cache_for) > 0;
+
+        if (refresh_required) {
             data = await load();
         }
 
