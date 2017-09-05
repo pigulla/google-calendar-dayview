@@ -17,11 +17,11 @@
    ```bash
    node dist/backend/cli auth-url --credentials ~/.gcd-auth/credentials.json
    ```
- - Open the returned URL in your browser and use the returned code to generate a bearer token:
+ - Open the returned URL in your browser and use the generated code to create a bearer token:
    ```bash
    node dist/backend/cli get-token --credentials ~/.gcd-auth/credentials.json --code <code>
    ```
- - Save the generated token in a separate file, e.g. `~/.gcd-auth/token.json`.
+ - Save that token in a separate file, e.g. `~/.gcd-auth/token.json`.
  - You should now be able to start the server using the two files created above:
    ```bash
    node dist/backend/cli serve --credentials ~/.gcd-auth/credentials.json --token ~/.gcd-auth/token.json --calendars config.json
