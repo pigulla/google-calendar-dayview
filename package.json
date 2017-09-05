@@ -1,6 +1,6 @@
 {
   "name": "google-calendar-dayview",
-  "version": "0.2.0",
+  "version": "0.3.0-alpha",
   "description": "A dead simple dashboard for meeting rooms using Google Calendar",
   "main": "dist/backend/cli/index.js",
   "engines": {
