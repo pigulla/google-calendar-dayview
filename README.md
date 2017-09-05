@@ -1,3 +1,11 @@
+[![npm version](http://img.shields.io/npm/v/google-calendar-dayview.svg?style=flat-square)](http://badge.fury.io/js/google-calendar-dayview)
+[![Build Status](http://img.shields.io/travis/pigulla/google-calendar-dayview.svg?style=flat-square)](https://travis-ci.org/pigulla/google-calendar-dayview)
+[![Dependency Status](https://img.shields.io/david/pigulla/google-calendar-dayview.svg?style=flat-square)](https://david-dm.org/pigulla/google-calendar-dayview)
+[![Development Dependency Status](https://img.shields.io/david/dev/pigulla/google-calendar-dayview.svg?style=flat-square)](https://david-dm.org/pigulla/google-calendar-dayview?type=dev)
+[![Known Vulnerabilities](https://snyk.io/test/github/pigulla/google-calendar-dayview/badge.svg?style=flat-square)](https://snyk.io/test/github/pigulla/google-calendar-dayview)
+![node](https://img.shields.io/node/v/google-calendar-dayview.svg?maxAge=2592000&style=flat-square)
+[![License](https://img.shields.io/npm/l/google-calendar-dayview.svg?maxAge=2592000&style=flat-square)](https://github.com/pigulla/google-calendar-dayview/blob/master/LICENSE)
+
 # google-calendar-dayview
 
 ## Setup
