@@ -48,6 +48,7 @@
         z-index: 3;
         justify-content: center;
         align-items: center;
+        overflow: hidden;
 
         a[rel] {
             @include em-scaled(0.35);
