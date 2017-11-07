@@ -45,5 +45,6 @@ module.exports = async function (config) {
 
             console.log(`Server listening on ${address} at port ${port}`);
             console.log(`Static files are being served from ${directory}`);
+            console.log(`Configured time zone is ${time_zone}`);
         });
 };
