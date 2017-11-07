@@ -103,7 +103,7 @@ module.exports.builder = function () {
                 }
 
                 const config = JSON.parse(buffer);
-                const result = Joi.validate(config, calendars_schema, {convert: false});
+                const result = Joi.validate(config, calendars_schema, { convert: false });
 
                 if (result.error) {
                     throw new Error(`Invalid calendar configuration: ${result.error.message}`);
