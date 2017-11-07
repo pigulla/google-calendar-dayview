@@ -1,6 +1,6 @@
 import assert from 'assert-plus';
 import { createAction } from 'redux-actions';
-import { Duration, LocalTime, ZoneId, LocalDateTime } from 'js-joda';
+import { Duration, LocalTime, ZonedDateTime } from 'js-joda';
 
 export const SET_TOUCH_CAPABILITY = 'APPLICATION_SET_TOUCH_CAPABILITY';
 export const SET_IDLE = 'APPLICATION_SET_IDLE';
@@ -15,7 +15,6 @@ const do_set_idle = createAction(SET_IDLE);
 const do_unset_idle = createAction(UNSET_IDLE);
 const do_last_activity = createAction(LAST_ACTIVITY);
 const do_set_time = createAction(SET_TIME);
-const do_set_time_zone = createAction(SET_TIME_ZONE);
 const do_configure_agenda = createAction(CONFIGURE_AGENDA);
 
 export function set_touch_capability(capable) {
@@ -45,18 +44,10 @@ export function last_activity() {
 }
 
 export function set_time(time) {
-    assert(time instanceof LocalDateTime, 'time');
+    assert(time instanceof ZonedDateTime, 'time');
 
     return function (dispatch) {
         dispatch(do_set_time(time));
-    };
-}
-
-export function set_time_zone(time_zone) {
-    assert(time_zone instanceof ZoneId, 'time_zone');
-
-    return function (dispatch) {
-        dispatch(do_set_time_zone(time_zone));
     };
 }
 

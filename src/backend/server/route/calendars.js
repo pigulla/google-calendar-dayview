@@ -13,7 +13,8 @@ module.exports = async function (app, { time_zone, credentials, token, calendars
 
         const result = await load_calendars(oauth_client, calendars, LocalDate.now(), time_zone);
         return {
-            updated: ZonedDateTime.now(),
+            time_zone: time_zone.id(),
+            updated: ZonedDateTime.now().withZoneSameInstant(time_zone),
             calendars: result.calendars,
             users: result.users
         };

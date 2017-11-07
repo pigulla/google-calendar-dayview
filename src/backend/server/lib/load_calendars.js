@@ -37,7 +37,7 @@ async function load_calendars(oauth_client, calendars_configs, day, time_zone) {
         const raw_events = await get_events(oauth_client, calendar_config.id, start_of_day, end_of_day);
         const { theme, ...config } = calendar_config;
         const events = raw_events
-            .map(event => Event.parse(event))
+            .map(event => Event.parse(event, time_zone))
             .filter(event => event.confirmed);
 
         return new Calendar({

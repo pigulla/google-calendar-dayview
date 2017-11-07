@@ -1,9 +1,13 @@
-import { LocalDateTime } from 'js-joda';
+import { ZonedDateTime } from 'js-joda';
 
 import { set_time } from 'app/store/action/application';
 
 export default interval => store => {
-    setInterval(() => store.dispatch(set_time(LocalDateTime.now())), interval);
+    setInterval(function () {
+        const zone = store.getState().getIn(['application', 'time_zone']);
+        const time = ZonedDateTime.now().withZoneSameInstant(zone);
+        store.dispatch(set_time(time));
+    }, interval);
 
     return next => action => next(action);
 };

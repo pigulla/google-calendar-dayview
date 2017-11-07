@@ -1,7 +1,9 @@
 import { ZoneId, ZonedDateTime, Duration, LocalTime } from 'js-joda';
 import { Map as ImmutableMap } from 'immutable';
+import { handle } from 'redux-pack';
 
 import * as Actions from 'app/store/action/application';
+import { LOAD as LOAD_CALENDARS } from 'app/store/action/calendars';
 
 const INITIAL_STATE = new ImmutableMap({
     touch_capable: false,
@@ -21,6 +23,14 @@ const agenda_config_keys = [...INITIAL_STATE.get('agenda_config').keys()];
 
 export default function (state = INITIAL_STATE, action = null) {
     switch (action.type) {
+        case LOAD_CALENDARS: {
+            return handle(state, action, {
+                success(prev_state) {
+                    return state.set('time_zone', ZoneId.of(action.payload.time_zone));
+                }
+            });
+        }
+
         case Actions.SET_TOUCH_CAPABILITY: {
             return state.set('touch_capable', action.payload);
         }
@@ -38,13 +48,7 @@ export default function (state = INITIAL_STATE, action = null) {
         }
 
         case Actions.SET_TIME: {
-            return state.set('time', action.payload.atZone(state.get('time_zone')));
-        }
-
-        case Actions.SET_TIME_ZONE: {
-            return state
-                .set('time_zone', action.payload)
-                .set('time', state.get('time').withZoneSameInstant(action.payload));
+            return state.set('time', action.payload);
         }
 
         case Actions.CONFIGURE_AGENDA: {

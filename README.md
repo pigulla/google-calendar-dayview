@@ -10,7 +10,7 @@
 
 ## Setup
 
- - Log in to a Google Account that has access to the calendars you want to display and go to the [API & Service Credentials](https://console.developers.google.com/apis/credentials) page.
+ - Log in to a Google Account that has access to the calendars you want to display, go to the [API & Service Credentials](https://console.developers.google.com/apis/credentials) page and create a new project.
  - Click the `Create credentials` button, select `OAuth client ID` and chose `Other` as the application type (use any name you like).
  - Download the credentials using the `Download JSON` button and put it in a sufficiently secure location (it does contain your client secret), e.g. `~/.gcd-auth/credentials.json`.
  - Generate the authentication URL:

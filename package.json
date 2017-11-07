@@ -4,7 +4,7 @@
   "description": "A dead simple dashboard for meeting rooms using Google Calendar",
   "main": "dist/backend/cli/index.js",
   "engines": {
-    "node": ">=8"
+    "node": "8"
   },
   "scripts": {
     "test": "npm run lint && npm run test-frontend && npm run nsp",
@@ -15,7 +15,8 @@
     "compile-frontend": "NODE_ENV=production webpack",
     "eslint": "eslint src/",
     "prepublishOnly": "npm test && rm -rf dist/ && npm run compile-backend && npm run compile-frontend",
-    "start": "node dist/backend/cli/index.js"
+    "start": "node dist/backend/cli/index.js",
+    "heroku-postbuild": "rm -rf dist/ && npm run compile-backend && npm run compile-frontend"
   },
   "files": [
     "dist/"

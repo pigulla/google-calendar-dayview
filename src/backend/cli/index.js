@@ -9,6 +9,7 @@ yargs
     .config('config')
     .help()
     .strict()
+    .env('GCD')
     .demandCommand(1, 'You must specify a command')
     .wrap(yargs.terminalWidth())
     .argv;

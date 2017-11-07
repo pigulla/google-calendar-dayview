@@ -18,7 +18,7 @@ class Event extends Record({
     organizer: null,
     is_private: null
 }) {
-    static parse(event) {
+    static parse(event, time_zone) {
         const attendees = (event.attendees || [])
             .filter(attendee => !attendee.resource)
             .filter(attendee => attendee.responseStatus === 'accepted')
@@ -33,10 +33,10 @@ class Event extends Record({
             confirmed,
             attendees: new ImmutableSet(attendees),
             link: event.htmlLink || null,
-            created: event.created ? ZonedDateTime.parse(event.created) : null,
-            updated: ZonedDateTime.parse(event.updated),
-            start: ZonedDateTime.parse(event.start.dateTime),
-            end: ZonedDateTime.parse(event.end.dateTime),
+            created: event.created ? ZonedDateTime.parse(event.created).withZoneSameInstant(time_zone) : null,
+            updated: ZonedDateTime.parse(event.updated).withZoneSameInstant(time_zone),
+            start: ZonedDateTime.parse(event.start.dateTime).withZoneSameInstant(time_zone),
+            end: ZonedDateTime.parse(event.end.dateTime).withZoneSameInstant(time_zone),
             summary: event.summary || null,
             creator: event.creator ? event.creator.email : null,
             organizer: event.organizer ? event.organizer.email : null,

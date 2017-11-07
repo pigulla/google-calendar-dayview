@@ -1,0 +1,1 @@
+web: npm start -- serve --refresh-after 60 --port $PORT --interface 0.0.0.0 --time-zone Europe/Berlin
