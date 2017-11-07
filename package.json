@@ -4,7 +4,7 @@
   "description": "A dead simple dashboard for meeting rooms using Google Calendar",
   "main": "dist/backend/cli/index.js",
   "engines": {
-    "node": ">=8"
+    "node": "8"
   },
   "scripts": {
     "test": "npm run lint && npm run test-frontend && npm run nsp",
