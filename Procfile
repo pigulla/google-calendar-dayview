@@ -1,0 +1,1 @@
+web: npm start -- serve --refresh-after 60 --credentials .auth/credentials.json --token .auth/token --calendars config.json --port $PORT
