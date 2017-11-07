@@ -71,7 +71,7 @@ class AgendaPage extends PureComponent {
         super(props, context);
 
         this.state = {
-            theme: props.theme ? props.theme.asPOJO() : null
+            theme: props.theme ? props.theme.toObject() : null
         };
     }
 

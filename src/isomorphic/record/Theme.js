@@ -16,18 +16,6 @@ class Theme extends Record({
         }));
     }
 
-    asPOJO() {
-        // styled-component's ThemeProvider expects a POJO as its theme :-(
-        // With Immutable v4 this will be easier (shallow toJSON-conversion by default).
-
-        return {
-            primary: this.primary,
-            alternate: this.alternate,
-            now: this.now,
-            grid: this.grid
-        };
-    }
-
     toJSON() {
         return {
             primary: this.primary.rgb().string(),
