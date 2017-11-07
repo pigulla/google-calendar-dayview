@@ -79,7 +79,7 @@ class AgendaPage extends PureComponent {
         // The ThemeProvider only accepts POJOs. To avoid unnecessary re-renderings, do not do this conversion on the
         // fly in the render method but only do it once when it changes.
         this.setState({
-            theme: next_props.theme ? next_props.theme.asPOJO() : null
+            theme: next_props.theme ? next_props.theme.toObject() : null
         });
     }
 
