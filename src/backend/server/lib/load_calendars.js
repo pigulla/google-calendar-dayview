@@ -9,6 +9,11 @@ const Theme = require('@/record/Theme');
 const User = require('@/record/User');
 const { rfc3339 } = require('@/date_formatter');
 
+/**
+ * @param {object} auth_client
+ * @param {string} email
+ * @returns {Promise.<record.User>}
+ */
 function load_user(auth_client, email) {
     const admin = google.admin('directory_v1');
     const options = {
@@ -27,6 +32,7 @@ function load_user(auth_client, email) {
  * @param {object} oauth_client
  * @param {Array.<object>} calendars_configs
  * @param {joda.LocalDate} day
+ * @param {joda.ZoneId} time_zone
  * @returns {Promise.<Immutable.List>}
  */
 async function load_calendars(oauth_client, calendars_configs, day, time_zone) {
