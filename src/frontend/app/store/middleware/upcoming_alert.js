@@ -14,12 +14,13 @@ import {
 export default ({ getState, dispatch }) => {
     const layer = new Layer(
         document.body,
-        () => // eslint-disable-line react/display-name
+        () => (// eslint-disable-line react/display-name
             <Provider store={store}>
                 <AlertOverlay
                     event={getState().getIn(['calendars', 'upcoming', 'event'])}
                     dismiss={() => dispatch(set_upcoming_handled())}/>
             </Provider>
+        )
     );
 
     return next => action => {

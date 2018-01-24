@@ -87,7 +87,7 @@ async function get_events(auth_client, calendar_id, from, to) {
 
     const response = await Promise.fromCallback(cb => calendar.events.list(params, cb));
 
-    return response.items;
+    return response.data.items;
 }
 
 module.exports = load_calendars;

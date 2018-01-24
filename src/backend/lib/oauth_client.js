@@ -1,5 +1,5 @@
 const assert = require('assert-plus');
-const GoogleAuth = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 
 // If modifying these scopes, delete your previously saved credentials
 const SCOPES = [
@@ -13,8 +13,7 @@ function init_oauth_client(credentials, token = undefined) {
 
     const { client_secret, client_id, redirect_uris } = credentials.installed;
 
-    const auth = new GoogleAuth();
-    const client = new auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+    const client = new OAuth2Client(client_id, client_secret, redirect_uris[0]);
 
     if (token) {
         client.credentials = token;
