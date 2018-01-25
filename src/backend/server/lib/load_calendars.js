@@ -24,7 +24,7 @@ function load_user(auth_client, email) {
 
     return Promise
         .fromCallback(cb => admin.users.get(options, cb))
-        .then(response => User.parse(response))
+        .then(response => User.parse(response.data))
         .catch(error => User.as_unknown(email));
 }
 
