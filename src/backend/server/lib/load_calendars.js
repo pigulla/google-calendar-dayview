@@ -9,6 +9,11 @@ const Theme = require('@/record/Theme');
 const User = require('@/record/User');
 const { rfc3339 } = require('@/date_formatter');
 
+/**
+ * @param {object} auth_client
+ * @param {string} email
+ * @returns {Promise.<record.User>}
+ */
 function load_user(auth_client, email) {
     const admin = google.admin('directory_v1');
     const options = {
@@ -19,7 +24,7 @@ function load_user(auth_client, email) {
 
     return Promise
         .fromCallback(cb => admin.users.get(options, cb))
-        .then(response => User.parse(response))
+        .then(response => User.parse(response.data))
         .catch(error => User.as_unknown(email));
 }
 
@@ -27,6 +32,7 @@ function load_user(auth_client, email) {
  * @param {object} oauth_client
  * @param {Array.<object>} calendars_configs
  * @param {joda.LocalDate} day
+ * @param {joda.ZoneId} time_zone
  * @returns {Promise.<Immutable.List>}
  */
 async function load_calendars(oauth_client, calendars_configs, day, time_zone) {
@@ -81,7 +87,7 @@ async function get_events(auth_client, calendar_id, from, to) {
 
     const response = await Promise.fromCallback(cb => calendar.events.list(params, cb));
 
-    return response.items;
+    return response.data.items;
 }
 
 module.exports = load_calendars;

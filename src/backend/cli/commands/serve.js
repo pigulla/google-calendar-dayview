@@ -51,8 +51,8 @@ module.exports.builder = function () {
         directory: {
             type: 'string',
             description:
-            'The directory from which the static files will be served. ' +
-            'Path will be relative to the current working directory.',
+                'The directory from which the static files will be served. ' +
+                'Path will be relative to the current working directory.',
             requiresArg: true,
             normalize: true,
             default: dist_dir,
@@ -159,11 +159,11 @@ module.exports.builder = function () {
         }
     }).check(function (argv, options) {
         if (argv.credentials === undefined && argv.credentialsJson === undefined) {
-            throw new Error('Either "credentials" or "credentials-json" can be specified');
+            throw new Error('Either "credentials" or "credentials-json" must be specified');
         } else if (argv.calendars === undefined && argv.calendarsJson === undefined) {
-            throw new Error('Either "calendars" or "calendars-json" can be specified');
+            throw new Error('Either "calendars" or "calendars-json" must be specified');
         } else if (argv.token === undefined && argv.tokenJson === undefined) {
-            throw new Error('Either "token" or "token-json" can be specified');
+            throw new Error('Either "token" or "token-json" must be specified');
         }
 
         return true;
