@@ -17,7 +17,9 @@
     "eslint": "eslint src/",
     "prepublishOnly": "npm test && rm -rf dist/ && npm run compile-backend && npm run compile-frontend",
     "start": "node dist/backend/cli/index.js",
-    "heroku-postbuild": "rm -rf dist/ && npm run compile-backend && npm run compile-frontend"
+    "heroku-postbuild": "rm -rf dist/ && npm run compile-backend && npm run compile-frontend",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "files": [
     "dist/"
@@ -81,7 +83,8 @@
     "string.prototype.padstart": "^3.0.0",
     "styled-components": "^3.0.2",
     "whatwg-fetch": "^2.0.3",
-    "yargs": "^11.0.0"
+    "yargs": "^11.0.0",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -115,5 +118,6 @@
     "svg-inline-loader": "^0.8.0",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.11.1"
-  }
+  },
+  "snyk": true
 }
